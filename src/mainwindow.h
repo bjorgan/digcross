@@ -18,7 +18,7 @@ const int CARDREADER_TIME_LIMIT_MS = 100;
 /**
  * Receives input from RFID card reader. Accumulates characters in a buffer and
  * emits a signal when card number is ready. (Receives keyboard characters,
- * send signal on \n.)
+ * send signal on \n.) Functions as an event filter.
  **/
 class CardReader : public QObject {
 	Q_OBJECT
@@ -32,6 +32,9 @@ class CardReader : public QObject {
 		 **/
 		void newCardNumber(QString number);
 	protected:
+		/**
+		 * Returns true and handles QKeyEvents. Emits characters accumulated when ENTER is pressed, given that the typing speed was lower than CARDREADER_TIME_LIMIT_MS.
+		 **/
 		bool eventFilter(QObject *object, QEvent *event);
 	private:
 		///Currently contained card number
