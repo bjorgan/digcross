@@ -10,4 +10,4 @@ First-time build:
 3. cmake ..
 4. make
 
-Requirements: Qt5 (Qt5-default in Debian), CMake.
+Requirements: Qt5 (qt5-default in Debian), CMake.
