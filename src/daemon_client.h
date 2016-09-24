@@ -1,3 +1,6 @@
+#include <QObject>
+#include <QString>
+
 /**
  * Client interface against daemon dealing with ufs connection/authentication.
  * Ufs transactions are sent through this client.
