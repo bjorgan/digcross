@@ -1,3 +1,6 @@
+#ifndef DAEMON_CLIENT_H_DEFINED
+#define DAEMON_CLIENT_H_DEFINED
+
 #include <QObject>
 #include <QString>
 
@@ -41,3 +44,5 @@ class DaemonClient : public QObject {
 		 **/
 		void transactionFeedback(QString username, float newBalance, TransactionStatus status);
 };
+
+#endif
