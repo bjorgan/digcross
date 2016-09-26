@@ -2,7 +2,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
 
-void UserGUIApplicationConnection::processTransaction(QString card_number, QString amount)
+void Daemon::processTransaction(QString card_number, QString amount)
 {
 	QMetaObject::invokeMethod(QCoreApplication::instance(), "quit");
 }
@@ -20,7 +20,6 @@ Daemon::Daemon(QObject *parent) : QObject(parent)
 		exit(1);
 	}
 
-	UserGUIApplicationConnection *connection = new UserGUIApplicationConnection;
-	QDBusConnection::systemBus().registerObject("/", connection, QDBusConnection::ExportAllSlots);
+	QDBusConnection::systemBus().registerObject("/", this, QDBusConnection::ExportAllSlots);
 }
 

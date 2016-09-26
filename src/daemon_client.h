@@ -23,7 +23,7 @@ class DaemonClient : public QObject {
 		/**
 		 * Connect to daemon.
 		 **/
-		DaemonClient(QObject *parent);
+		DaemonClient(QObject *parent = NULL);
 	public slots:
 		/**
 		 * Attempt to process transaction for a card number and amount.
