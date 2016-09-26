@@ -1,10 +1,11 @@
 #include "daemon.h"
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
+#include <iostream>
 
 void Daemon::processTransaction(QString card_number, QString amount)
 {
-	QMetaObject::invokeMethod(QCoreApplication::instance(), "quit");
+	std::cout << "Received transaction: " << card_number.toStdString() << " " << amount.toStdString() << std::endl;
 }
 
 Daemon::Daemon(QObject *parent) : QObject(parent)
@@ -20,6 +21,7 @@ Daemon::Daemon(QObject *parent) : QObject(parent)
 		exit(1);
 	}
 
+	//set up dbus connection across system bus
 	QDBusConnection::systemBus().registerObject("/", this, QDBusConnection::ExportAllSlots);
 }
 
