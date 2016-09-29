@@ -3,6 +3,9 @@
 
 #define DBUS_SERVICE_NAME "org.digcross.daemonconnection"
 
+/**
+ * Daemon object. Sets up dbus connection and exports processTransaction() as a DBus remote call.
+ **/
 class Daemon : public QObject {
 	Q_OBJECT
 	public:
@@ -10,6 +13,8 @@ class Daemon : public QObject {
 	public slots:
 		/**
 		 * Receive request for transaction from GUI application.
+		 * Returns with name of user, current balance and transaction
+		 * status when finished. (QString, QString, int)
 		 *
 		 * \param card_number Card number
 		 * \param amount Amount

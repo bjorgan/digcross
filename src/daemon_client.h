@@ -8,6 +8,10 @@
 /**
  * Client interface against daemon dealing with ufs connection/authentication.
  * Ufs transactions are sent through this client.
+ *
+ * - To process a transaction, call processTransaction() on a given card number and amount to process.
+ * - To receive a result from this transaction, connect transactionFeedback() to a suitable SLOT.
+ * - DBus-related errors are signaled through dbusError().
  **/
 class DaemonClient : public QObject {
 	Q_OBJECT
