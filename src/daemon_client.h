@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QDBusPendingCallWatcher>
 
 /**
  * Client interface against daemon dealing with ufs connection/authentication.
@@ -20,9 +21,6 @@ class DaemonClient : public QObject {
 				       USER_NOT_IN_LOCAL_DATABASE,
 				       UFS_UNAVAILABLE};
 
-		/**
-		 * Connect to daemon.
-		 **/
 		DaemonClient(QObject *parent = NULL);
 	public slots:
 		/**
@@ -38,11 +36,21 @@ class DaemonClient : public QObject {
 		 * the daemon. By design, we restrict database information to
 		 * the information defined here.
 		 *
-		 * \param username Username username connected
+		 * \param username Username connected to card number
 		 * \param newBalance New balance for user after transaction
 		 * \param status Status of transaction
 		 **/
 		void transactionFeedback(QString username, float newBalance, TransactionStatus status);
+		void dbusError(QString errorMessage);
+	private slots:
+		/**
+		 * For catching internal signal when daemon is finished with
+		 * transaction and a reply has been sent.  Will emit
+		 * transactionFeedback() with the results.
+		 *
+		 * \param watcher DBus pending reply watcher
+		 **/
+		void transactionFinished(QDBusPendingCallWatcher *watcher);
 };
 
 #endif

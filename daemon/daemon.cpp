@@ -3,9 +3,16 @@
 #include <QtDBus/QtDBus>
 #include <iostream>
 
-void Daemon::processTransaction(QString card_number, QString amount)
+void Daemon::processTransaction(QString card_number, QString amount, const QDBusMessage &msg)
 {
-	std::cout << "Received transaction: " << card_number.toStdString() << " " << amount.toStdString() << std::endl;
+	//FIXME: Real calls against backend API.
+	//prepare dummy reply: nickname, balance, transaction status
+	QList<QVariant> return_values;
+	return_values << QVariant("tjata");
+	return_values << QVariant(QString::number(-600));
+	return_values << QVariant(2);
+	QDBusMessage reply = msg.createReply(return_values);
+	QDBusConnection::systemBus().send(reply);
 }
 
 Daemon::Daemon(QObject *parent) : QObject(parent)
