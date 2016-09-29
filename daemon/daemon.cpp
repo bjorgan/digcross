@@ -5,7 +5,14 @@
 
 void Daemon::processTransaction(QString card_number, QString amount, const QDBusMessage &msg)
 {
-	//FIXME: Real calls against backend API.
+	//TODO: Lookup username from card_number.
+
+	//TODO: Load authkey from file.
+
+	//TODO: Do real calls against backend API.
+	
+	//TODO: Get result from transaction. Build feedback reply.
+
 	//prepare dummy reply: nickname, balance, transaction status
 	QList<QVariant> return_values;
 	return_values << QVariant("tjata");
