@@ -10,7 +10,7 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	//TODO: Load authkey from file.
 
 	//TODO: Do real calls against backend API.
-	
+
 	//TODO: Get result from transaction. Build feedback reply.
 
 	//prepare dummy reply: nickname, balance, transaction status
