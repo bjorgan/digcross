@@ -2,6 +2,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
 #include <iostream>
+#include "daemon_common.h"
 
 void Daemon::processTransaction(QString card_number, QString amount, const QDBusMessage &msg)
 {

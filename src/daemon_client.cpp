@@ -1,5 +1,5 @@
 #include "daemon_client.h"
-#include "../daemon/daemon.h"
+#include "../daemon/daemon_common.h"
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <cstdio>

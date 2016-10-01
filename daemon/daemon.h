@@ -1,8 +1,6 @@
 #include <QObject>
 #include <QDBusReply>
 
-#define DBUS_SERVICE_NAME "org.digcross.daemonconnection"
-
 /**
  * Daemon object. Sets up dbus connection through system bus and exports processTransaction() as a DBus remote call.
  **/
