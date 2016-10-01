@@ -36,6 +36,6 @@ Daemon::Daemon(QObject *parent) : QObject(parent)
 	}
 
 	//set up dbus connection across system bus
-	QDBusConnection::systemBus().registerObject("/", this, QDBusConnection::ExportAllSlots);
+	QDBusConnection::systemBus().registerObject("/", this, QDBusConnection::ExportScriptableSlots);
 }
 
