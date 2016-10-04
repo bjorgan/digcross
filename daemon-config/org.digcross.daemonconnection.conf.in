@@ -1,0 +1,17 @@
+<!DOCTYPE busconfig PUBLIC
+"-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+
+	<policy user="asgeirbj">
+		<allow own="org.digcross.daemonconnection"/>
+	</policy>
+
+	<policy context="default">
+		<allow send_interface="org.digcross.daemonconnection"/>
+		<allow receive_sender="org.digcross.daemonconnection"/>
+		<allow receive_interface="org.digcross.daemonconnection"/>
+		<allow send_type="method_call"/>
+	</policy>
+
+</busconfig>

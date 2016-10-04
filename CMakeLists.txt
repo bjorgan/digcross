@@ -11,3 +11,10 @@ add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/d
 add_executable(digcrossd daemon/main.cpp daemon/daemon.cpp)
 target_link_libraries(digcross Qt5::Widgets Qt5::DBus)
 target_link_libraries(digcrossd Qt5::DBus Qt5::Widgets)
+
+#dbus config
+configure_file(daemon-config/org.digcross.daemonconnection.service.in org.digcross.daemonconnection.service @ONLY)
+configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.daemonconnection.conf @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.service DESTINATION /usr/share/dbus-1/services)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.conf DESTINATION /etc/dbus-1/system.d)
+install(TARGETS digcrossd DESTINATION bin)
