@@ -3,7 +3,7 @@
 "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
 <busconfig>
 
-	<policy user="asgeirbj">
+	<policy user="@DIGCROSS_USER@">
 		<allow own="org.digcross.daemonconnection"/>
 	</policy>
 
