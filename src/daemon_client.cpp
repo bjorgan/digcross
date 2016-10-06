@@ -12,14 +12,11 @@ DaemonClient::DaemonClient(QObject *parent) : QObject(parent)
 void DaemonClient::processTransaction(QString card_number, float amount)
 {
 	QDBusInterface iface(DBUS_SERVICE_NAME, "/", "", QDBusConnection::systemBus());
-	if (iface.isValid()) {
-		//send message to daemon and prepare for reply
-		QDBusPendingCall pendingCall = iface.asyncCall("processTransaction", card_number, QString::number(amount));
-		QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pendingCall, this);
-		connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(transactionFinished(QDBusPendingCallWatcher*)));
-	} else {
-		emit dbusError(QDBusConnection::systemBus().lastError().message());
-	}
+
+	//send message to daemon and prepare for reply
+	QDBusPendingCall pendingCall = iface.asyncCall("processTransaction", card_number, QString::number(amount));
+	QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pendingCall, this);
+	connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(transactionFinished(QDBusPendingCallWatcher*)));
 }
 
 void DaemonClient::transactionFinished(QDBusPendingCallWatcher *call)
