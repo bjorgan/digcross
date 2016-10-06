@@ -26,13 +26,9 @@ Requirements: Qt5 (qt5-default in Debian), CMake.
 Daemon
 ------
 
-Transactions are sent using DBus' system bus to an external daemon (digcrossd).
-The daemon is installed using
+By design, transactions will be sent to an external daemon. The daemon and its
+necessary (DBus) configuration files are installed using
 
 ```
 make install
 ```
-
-This also takes care of installing the necessary configuration files to
-DBus' system-wide configuration directories. The daemon is run
-automatically as a DBus service whenever requested from digcross.
