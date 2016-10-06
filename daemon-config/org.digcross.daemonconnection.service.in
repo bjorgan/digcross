@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=org.digcross.daemonconnection
 Exec=@CMAKE_INSTALL_PREFIX@/bin/digcrossd
-User=@DIGCROSS_USER@
+User=@DIGCROSSD_USER@
