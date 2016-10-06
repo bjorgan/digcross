@@ -45,6 +45,12 @@ class DaemonClient : public QObject {
 		 * \param status Status of transaction
 		 **/
 		void transactionFeedback(QString username, float newBalance, TransactionStatus status);
+
+		/**
+		 * Signalled on DBus errors.
+		 *
+		 * \param errorMessage Error message
+		 **/
 		void dbusError(QString errorMessage);
 	private slots:
 		/**
