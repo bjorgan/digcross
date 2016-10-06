@@ -13,7 +13,7 @@ target_link_libraries(digcross Qt5::Widgets Qt5::DBus)
 target_link_libraries(digcrossd Qt5::DBus Qt5::Widgets)
 
 #dbus config
-set(DIGCROSSD_USER $ENV{USER}) #FIXME: Set a different username (e.g. digcrossd). This will make digcrossd be run as the current user.
+set(DIGCROSSD_USER $ENV{USER}) #FIXME: Set a different username (e.g. digcrossd)
 
 configure_file(daemon-config/org.digcross.daemonconnection.service.in org.digcross.daemonconnection.service @ONLY)
 configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.daemonconnection.conf @ONLY)
