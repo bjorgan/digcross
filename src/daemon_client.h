@@ -40,11 +40,11 @@ class DaemonClient : public QObject {
 		 * the daemon. By design, we restrict database information to
 		 * the information defined here.
 		 *
-		 * \param username Username connected to card number
+		 * \param card_number Card number for which transaction was processed
 		 * \param newBalance New balance for user after transaction
 		 * \param status Status of transaction
 		 **/
-		void transactionFeedback(QString username, float newBalance, TransactionStatus status);
+		void transactionFeedback(QString card_number, float newBalance, TransactionStatus status);
 
 		/**
 		 * Signalled on DBus errors.

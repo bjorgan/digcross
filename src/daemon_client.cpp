@@ -29,11 +29,11 @@ void DaemonClient::transactionFinished(QDBusPendingCallWatcher *call)
 	}
 
 	//parse returned values and emit result
-	QString username = reply.argumentAt(0).toString();
+	QString card_number = reply.argumentAt(0).toString();
 	QString balance = reply.argumentAt(1).toString();
 	TransactionStatus status = (TransactionStatus)reply.argumentAt(2).toInt();
 
-	emit transactionFeedback(username, balance.toFloat(), status);
+	emit transactionFeedback(card_number, balance.toFloat(), status);
 
 	call->deleteLater();
 }

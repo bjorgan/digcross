@@ -16,7 +16,7 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 
 	//prepare dummy reply: nickname, balance, transaction status
 	QList<QVariant> return_values;
-	return_values << QVariant("tjata");
+	return_values << QVariant(card_number);
 	return_values << QVariant(QString::number(-600));
 	return_values << QVariant(2);
 	QDBusMessage reply = msg.createReply(return_values);
