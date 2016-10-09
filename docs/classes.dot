@@ -9,15 +9,15 @@ digraph G {
 
 	subgraph clusterfilesystem {
 		label="File system"
-		userdbfile[color=blue,label="/usr/share/.../users.db (readable by user?)"]
-		pricefile[color=blue,label="/usr/share/.../prices.list (readable by user)"]
+		userdbfile[color=blue,label="users.db (readable by user?)"]
+		pricefile[color=blue,label="prices.list (readable by user)"]
 		authfile[color=blue,label="authkey for ufs (non-readable by user)"]
 	}
 
 	subgraph clustergui{
 		label="User GUI (run as user)"
 		shoppinglistgui[shape=record,label="{ Shopping list GUI | Show shopping list | Edit items in list | Transaction success/failed | ... }"]
-		menu[shape=record,label="{ Menu GUI | Generate from price list/MVC setup | Menu items | ... }"]
+		menu[shape=record,label="{ Menu GUI | Generate from price list | Menu items | ... }"]
 	}
 
 	subgraph clusteradmingui{
@@ -40,7 +40,7 @@ digraph G {
 
 
 	cardreader->shoppinglistgui[label="New card number"]
-	shoppinglist->shoppinglistgui[label="MVC relationship?"]
+	shoppinglist->shoppinglistgui
 	userdbfile->userdb
 	pricefile->pricelist
 	pricelist->menu[label="Generates"]
