@@ -12,14 +12,14 @@ First-time build:
 4. make
 ```
 
-Alternatively: Use qmake directly.
+To build with tests, use:
 
 ```
-1. mkdir build
-2. cd build
-3. qmake ..
+3. cmake -DWITH_TESTING=True ..
 4. make
 ```
+
+Tests can be run using `make test`.
 
 Requirements: Qt5 (qt5-default in Debian), CMake.
 
