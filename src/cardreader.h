@@ -1,3 +1,6 @@
+#ifndef CARDREADER_H_DEFINED
+#define CARDREADER_H_DEFINED
+
 #include <QObject>
 #include <QElapsedTimer>
 
@@ -38,3 +41,5 @@ class CardReader : public QObject {
 		///Used for measuring time since first character
 		QElapsedTimer writeTime;
 };
+
+#endif
