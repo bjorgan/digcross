@@ -24,3 +24,9 @@ configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.service DESTINATION /usr/share/dbus-1/system-services)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.conf DESTINATION /etc/dbus-1/system.d)
 install(TARGETS digcrossd DESTINATION bin)
+
+#tests
+if (WITH_TESTING)
+	enable_testing()
+	add_subdirectory(tests)
+endif (WITH_TESTING)
