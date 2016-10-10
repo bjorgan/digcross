@@ -20,7 +20,7 @@ void DaemonClientTest::daemonConnection()
 	QVERIFY(transactionSpy.wait(SIGNAL_TIMEOUT));
 	QCOMPARE(transactionSpy.count(), 1);
 	QList<QVariant> arguments = transactionSpy.takeFirst();
-	QVERIFY(arguments.at(0).toString() == cardNumber);
+	QCOMPARE(arguments.at(0).toString(), cardNumber);
 }
 
 QTEST_MAIN(DaemonClientTest)

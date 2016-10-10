@@ -16,6 +16,11 @@ class CardReaderTest : public QObject {
 		void simulateKeyboardInput();
 
 		/**
+		 * Simulate a second RFID read.
+		 **/
+		void simulateSecondRFIDReader();
+
+		/**
 		 * Set up CardReader and install as event filter for a widget.
 		 **/
 		void initTestCase();
