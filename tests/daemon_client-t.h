@@ -6,9 +6,7 @@ class DaemonClientTest : public QObject {
 		/**
 		 * Connect to transaction daemon and verify the feedback.  For
 		 * convenience in checking that the daemon and full dbus chain
-		 * is correctly set up (not really a proper unit test, will
-		 * assume that the daemon and associated configs are correctly
-		 * installed).
+		 * is correctly set up (integration test).
 		 **/
 		void daemonConnection();
 };
