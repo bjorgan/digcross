@@ -70,16 +70,44 @@ int ShoppingList::columnCount(const QModelIndex &parent) const
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
 {
-	ShoppingListData::const_iterator item = getItem(index);
-	int column = index.column();
+	if (role == Qt::DisplayRole) {
+		ShoppingListData::const_iterator item = getItem(index);
+		int column = index.column();
 
-	switch (column) {
-		case ITEM_NAME_COL:
-			return QVariant(item.key());
-		case ITEM_PRICE_COL:
-			return QVariant(item->second);
-		case ITEM_AMOUNT_COL:
-			return QVariant(item->first);
+		switch (column) {
+			case ITEM_NAME_COL:
+				return QVariant(item.key());
+			case ITEM_PRICE_COL:
+				return QVariant(item->second);
+			case ITEM_AMOUNT_COL:
+				return QVariant(item->first);
+		}
+	}
+
+	return QVariant(QVariant::Invalid);
+}
+
+Qt::ItemFlags ShoppingList::flags(const QModelIndex &index) const
+{
+	if (index.column() == ITEM_AMOUNT_COL) {
+		return Qt::ItemIsEnabled | Qt::ItemIsEditable;
+	} else {
+		return Qt::NoItemFlags;
 	}
 }
 
+/**
+ * QAbstractTableModel edit functions.
+ **/
+
+bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+	ShoppingListData::iterator item = getItem(index);
+	if (index.column() == ITEM_AMOUNT_COL) {
+		setItemAmount(item.key(), value.toInt());
+		emit dataChanged(index, index);
+		return true;
+	}
+
+	return false;
+}
