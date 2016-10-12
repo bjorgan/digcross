@@ -20,6 +20,44 @@ void ShoppingList::setItemAmount(QString itemName, int amount)
 	items[itemName].first = amount;
 }
 
+void ShoppingList::deleteItem(QString itemName)
+{
+	items.erase(items.find(itemName));
+}
+
+void ShoppingList::wipeList()
+{
+	items.clear();
+}
+
+/**
+ * QAbstractTableModel subclassing convenience functions.
+ **/
+
+void ShoppingList::setItemAmount(const QModelIndex &parent, int amount)
+{
+	setItemAmount(getItem(parent).key(), amount);
+}
+
+void ShoppingList::deleteItem(const QModelIndex &parent)
+{
+	deleteItem(getItem(parent).key());
+}
+
+ShoppingListDB::const_iterator ShoppingList::getItem(const QModelIndex &parent) const
+{
+	return (items.begin() + parent.row());
+}
+
+ShoppingListDB::iterator ShoppingList::getItem(const QModelIndex &parent)
+{
+	return (items.begin() + parent.row());
+}
+
+/**
+ * Neccessary functions for QAbstractTableModel subclassing.
+ **/
+
 int ShoppingList::rowCount(const QModelIndex &parent) const
 {
 	return items.size();
@@ -45,32 +83,3 @@ QVariant ShoppingList::data(const QModelIndex &index, int role) const
 	}
 }
 
-void ShoppingList::setItemAmount(const QModelIndex &parent, int amount)
-{
-	setItemAmount(getItem(parent).key(), amount);
-}
-
-void ShoppingList::deleteItem(QString itemName)
-{
-	items.erase(items.find(itemName));
-}
-
-void ShoppingList::deleteItem(const QModelIndex &parent)
-{
-	deleteItem(getItem(parent).key());
-}
-
-void ShoppingList::wipeList()
-{
-	items.clear();
-}
-
-ShoppingListDB::const_iterator ShoppingList::getItem(const QModelIndex &parent) const
-{
-	return (items.begin() + parent.row());
-}
-
-ShoppingListDB::iterator ShoppingList::getItem(const QModelIndex &parent)
-{
-	return (items.begin() + parent.row());
-}
