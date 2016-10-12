@@ -44,12 +44,12 @@ void ShoppingList::deleteItem(const QModelIndex &parent)
 	deleteItem(getItem(parent).key());
 }
 
-ShoppingListDB::const_iterator ShoppingList::getItem(const QModelIndex &parent) const
+ShoppingListData::const_iterator ShoppingList::getItem(const QModelIndex &parent) const
 {
 	return (items.begin() + parent.row());
 }
 
-ShoppingListDB::iterator ShoppingList::getItem(const QModelIndex &parent)
+ShoppingListData::iterator ShoppingList::getItem(const QModelIndex &parent)
 {
 	return (items.begin() + parent.row());
 }
@@ -70,7 +70,7 @@ int ShoppingList::columnCount(const QModelIndex &parent) const
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
 {
-	ShoppingListDB::const_iterator item = getItem(index);
+	ShoppingListData::const_iterator item = getItem(index);
 	int column = index.column();
 
 	switch (column) {
