@@ -6,6 +6,8 @@ TEMPLATE = app
 TARGET = digikryss
 INCLUDEPATH += .
 QT += widgets
+QT += sql
+
 
 # Input
 HEADERS += src/cardreader.h src/mainwindow.h
