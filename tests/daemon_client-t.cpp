@@ -20,10 +20,10 @@ void DaemonClientTest::dbusServiceAvailable()
 	if (!dbus_reply.isValid()) {
 		QDBusError err = dbus_reply.error();
 		if (err.type() == QDBusError::ServiceUnknown) {
-			//likely error: .service-file was not installed to /usr/share/dbus-1/system.d/, run make install
 			QVERIFY2(dbus_reply.isValid(), "digcrossd .service file is missing");
+		} else if (err.type() != QDBusError::Other) {
+			QVERIFY2(dbus_reply.isValid(), qPrintable(err.message()));
 		} else {
-			//likely error: .conf-file was not installed to /etc/dbus-1/system.conf, or digcrossd is missing from PATH, or digcrossd crashed on launch.
 			QVERIFY2(dbus_reply.isValid(), QString("digcrossd could not be executed by DBus, insufficient DBus policies, missing executable or daemon exited with error code. DBus error message: " + err.message()).toStdString().c_str());
 		}
 	}
@@ -41,7 +41,7 @@ void DaemonClientTest::sendTransactionRequestToDaemonAndWaitForFeedback()
 	client.processTransaction(cardNumber, 0);
 
 	//verify that we receive the same card number back in the transaction feedback
-	QVERIFY(transactionSpy.wait(SIGNAL_TIMEOUT));
+	QVERIFY2(transactionSpy.wait(SIGNAL_TIMEOUT), "DBus call timed out, digcrossd service likely not running.");
 	QCOMPARE(transactionSpy.count(), 1);
 	QList<QVariant> arguments = transactionSpy.takeFirst();
 	QCOMPARE(arguments.at(0).toString(), cardNumber);
