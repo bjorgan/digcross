@@ -17,7 +17,7 @@ class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
 	public:
 		ShoppingList(QObject *parent = NULL);
-		
+
 		/**
 		 * Get total amount in shopping list.
 		 **/
