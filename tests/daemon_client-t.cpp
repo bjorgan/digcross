@@ -15,8 +15,7 @@ void DaemonClientTest::dbusServiceAvailable()
 	QVERIFY(connection.isConnected());
 
 	//check digcrossd service availability
-	QDBusMessage call = QDBusMessage::createMethodCall(DBUS_SERVICE_NAME, QLatin1String("/"), QLatin1String("org.freedesktop.DBus.Introspectable"), QLatin1String("Introspect"));
-	QDBusReply<QString> dbus_reply = connection.call(call);
+	QDBusReply<QString> dbus_reply = connection.call(QDBusMessage::createMethodCall(DBUS_SERVICE_NAME, QLatin1String("/"), QLatin1String("org.freedesktop.DBus.Introspectable"), QLatin1String("Introspect")));
 	if (!dbus_reply.isValid()) {
 		QDBusError err = dbus_reply.error();
 		if (err.type() == QDBusError::ServiceUnknown) {
