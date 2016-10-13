@@ -32,3 +32,6 @@ necessary (DBus) configuration files are installed using
 ```
 make install
 ```
+
+(Since DBus looks for configuration files in a few (system-wide) paths, the above command
+has to be run with sudo/as root regardless of install prefix.)
