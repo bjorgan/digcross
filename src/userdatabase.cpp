@@ -19,18 +19,9 @@
 //For use in actual application the database will have to be fetched by a cronjob
 //or similar tools from its backup location. 
 
-class UserDatabase
-{
-public:
-	UserDatabase(const QString& path); //path is path to sqlite3 database file
-	FindUser(QString CARD_ID); //Returns username connected to CARD number
-	CreateUser(QString USER_ID); //Returns error if user exists. Check validity of user?
-	AddCard(QString USER_ID, QString CARD_ID); //Returns error if card already registered
-private:
-	QSqlDatabase m_db;
-}
 
-UserDatabase::UserDatabase(const QString &path)
+
+userDatabase::userDatabase(const QString &path)
 {
 	m_db = QSqlDatabase::addDatabase("QSQLITE");
 	m_db.setDatabaseName(path);
@@ -46,7 +37,7 @@ UserDatabase::UserDatabase(const QString &path)
 
 }
 
-UserDatabase::~UserDatabase()
+userDatabase::~userDatabase()
 {
 	if (m_db.isOpen())
 		{
@@ -54,27 +45,7 @@ UserDatabase::~UserDatabase()
 		}
 }
 
-bool UserDatabase::addUsername(const QString& name)
-{
-	bool success = false;
-	//Verify that username is real and part of pool. Do query against ufs for
-	//verification, delete otherwise. Do this here or in higher level?
-	QSqlQuery query;
-	query.prepare("INSERT INTO people (name) VALUES (:name)"); // Prepare query
-	query.bindValue(":name", name); //Fill placeholders with proper values
-	if(query.exec()) //Execute query
-	{
-		success = true;
-	}
-	else
-	{
-		qDebug() << "addUsername error: "
-			 << query.lastError();
-	}
-	return success;
-}
-
-bool UserDatabase::usernameExists(const QString& name)
+bool userDatabase::usernameExists(const QString& USER_ID)
 {
 	bool not_exists = false;
 
@@ -95,4 +66,31 @@ bool UserDatabase::usernameExists(const QString& name)
 	}
 	return not_exists;
 }
+
+bool userDatabase::cardExists(const QString& CARD_ID)
+{
+
+
+}
+
+bool userDatabase::addUsername(const QString& name)
+{
+	bool success = false;
+	//Verify that username is real and part of pool. Do query against ufs for
+	//verification, delete otherwise. Do this here or in higher level?
+	QSqlQuery query;
+	query.prepare("INSERT INTO people (name) VALUES (:name)"); // Prepare query
+	query.bindValue(":name", name); //Fill placeholders with proper values
+	if(query.exec()) //Execute query
+	{
+		success = true;
+	}
+	else
+	{
+		qDebug() << "addUsername error: "
+			 << query.lastError();
+	}
+	return success;
+}
+
 
