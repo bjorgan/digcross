@@ -12,12 +12,16 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 
 void ShoppingList::setItemPrice(QString itemName, double price)
 {
-	items[itemName].second = price;
+	if (price > 0) {
+		items[itemName].second = price;
+	}
 }
 
 void ShoppingList::setItemAmount(QString itemName, int amount)
 {
-	items[itemName].first = amount;
+	if (amount > 0) {
+		items[itemName].first = amount;
+	}
 }
 
 void ShoppingList::deleteItem(QString itemName)
