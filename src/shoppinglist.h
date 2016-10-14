@@ -74,7 +74,11 @@ class ShoppingList : public QAbstractTableModel {
 		 * Wipe entire shopping list.
 		 **/
 		void wipeList();
-//		void deleteLastAddedItem();
+
+		/**
+		 * Delete last added item.
+		 **/
+		void deleteLastAddedItem();
 	private:
 		///Shopping list data structure
 		ShoppingListData items;

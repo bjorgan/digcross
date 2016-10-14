@@ -6,6 +6,8 @@ ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 
 void ShoppingList::newItem(QString itemName, double price, int amount)
 {
+	//TODO: call correct rowChanged, rowInserted functions. 
+
 	setItemPrice(itemName, price);
 	setItemAmount(itemName, amount);
 }
@@ -32,6 +34,14 @@ void ShoppingList::deleteItem(QString itemName)
 void ShoppingList::wipeList()
 {
 	items.clear();
+}
+
+void ShoppingList::deleteLastAddedItem()
+{
+}
+
+double ShoppingList::getTotalAmount()
+{
 }
 
 /**
