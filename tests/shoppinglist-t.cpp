@@ -6,6 +6,8 @@
 void ShoppingListTest::init()
 {
 	shoppingList = new ShoppingList;
+
+	//TODO: Since all tests mostly use the same data, populate the shoppingList here.
 }
 
 void ShoppingListTest::cleanup()
