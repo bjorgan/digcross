@@ -90,7 +90,7 @@ class ShoppingList : public QAbstractTableModel {
 		void setItemPrice(QString itemName, double price);
 
 		/**
-		 * Get item name associated with a given position.
+		 * Get item name associated with a given row along itemRows.
 		 *
 		 * \param row Row number
 		 **/

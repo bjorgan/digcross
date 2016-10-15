@@ -30,6 +30,7 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 		isNewRow = false;
 	}
 
+	//add/change item
 	setItemPrice(itemName, price);
 	setItemAmount(itemName, amount);
 
