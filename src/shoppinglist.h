@@ -11,7 +11,8 @@ const int NUM_SHOPPINGLIST_PROPERTIES = 3;
 ///Column index for amount in shopping list model
 #define ITEM_AMOUNT_COL 2
 
-typedef QMap<QString, std::pair<int, double> > ShoppingListData;
+typedef std::pair<int, double> ShoppingListItem;
+typedef QMap<QString, ShoppingListItem> ShoppingListData;
 
 class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
@@ -80,8 +81,11 @@ class ShoppingList : public QAbstractTableModel {
 		 **/
 		void deleteLastAddedItem();
 	private:
-		///Shopping list data structure
+		///List over shopping list entries
 		ShoppingListData items;
+		///Shopping list row number associated with each entry
+//		ShoppingListDataRows itemRows;
+		QVector<QString> itemRows;
 
 		/**
 		 * Set price of item.
@@ -91,11 +95,5 @@ class ShoppingList : public QAbstractTableModel {
 		 **/
 		void setItemPrice(QString itemName, double price);
 
-		/**
-		 * Get iterator to item in shopping list. Used for model/view convenience.
-		 *
-		 * \param index Index
-		 **/
-		ShoppingListData::const_iterator getItem(const QModelIndex &index) const;
-		ShoppingListData::iterator getItem(const QModelIndex &index);
+		QString getItemName(int row) const;
 };

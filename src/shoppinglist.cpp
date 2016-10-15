@@ -1,4 +1,6 @@
 #include "shoppinglist.h"
+#include <iostream>
+#include <QHash>
 
 ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 {
@@ -6,8 +8,13 @@ ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 
 void ShoppingList::newItem(QString itemName, double price, int amount)
 {
-	//TODO: call correct rowChanged, rowInserted functions. 
+	int row = 0;
+	bool newRow = false;
+	if (!items.contains(itemName)) {
+		itemRows.push_back(itemName);
+	}
 
+	//TODO: call correct rowChanged, rowInserted functions. 
 	setItemPrice(itemName, price);
 	setItemAmount(itemName, amount);
 }
@@ -29,11 +36,13 @@ void ShoppingList::setItemAmount(QString itemName, int amount)
 void ShoppingList::deleteItem(QString itemName)
 {
 	items.erase(items.find(itemName));
+	itemRows.erase(itemRows.begin() + itemRows.lastIndexOf(itemName));
 }
 
 void ShoppingList::wipeList()
 {
 	items.clear();
+	itemRows.clear();
 }
 
 void ShoppingList::deleteLastAddedItem()
@@ -50,22 +59,12 @@ double ShoppingList::getTotalAmount()
 
 void ShoppingList::setItemAmount(const QModelIndex &parent, int amount)
 {
-	setItemAmount(getItem(parent).key(), amount);
+	setItemAmount(getItemName(parent.row()), amount);
 }
 
 void ShoppingList::deleteItem(const QModelIndex &parent)
 {
-	deleteItem(getItem(parent).key());
-}
-
-ShoppingListData::const_iterator ShoppingList::getItem(const QModelIndex &parent) const
-{
-	return (items.begin() + parent.row());
-}
-
-ShoppingListData::iterator ShoppingList::getItem(const QModelIndex &parent)
-{
-	return (items.begin() + parent.row());
+	deleteItem(getItemName(parent.row()));
 }
 
 /**
@@ -84,17 +83,22 @@ int ShoppingList::columnCount(const QModelIndex &parent) const
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
 {
-	if (role == Qt::DisplayRole) {
-		ShoppingListData::const_iterator item = getItem(index);
+	if ((role == Qt::DisplayRole)) {
+		QString itemName = getItemName(index.row());
+		if (itemName == QString()) {
+			return QVariant(QVariant::Invalid);
+		}
+
+		ShoppingListItem item = items[itemName];
 		int column = index.column();
 
 		switch (column) {
 			case ITEM_NAME_COL:
-				return QVariant(item.key());
+				return itemName;
 			case ITEM_PRICE_COL:
-				return QVariant(item->second);
+				return item.second;
 			case ITEM_AMOUNT_COL:
-				return QVariant(item->first);
+				return item.first;
 		}
 	}
 
@@ -116,12 +120,20 @@ Qt::ItemFlags ShoppingList::flags(const QModelIndex &index) const
 
 bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-	ShoppingListData::iterator item = getItem(index);
 	if (index.column() == ITEM_AMOUNT_COL) {
-		setItemAmount(item.key(), value.toInt());
+		setItemAmount(getItemName(index.row()), value.toInt());
 		emit dataChanged(index, index);
 		return true;
 	}
 
 	return false;
+}
+
+QString ShoppingList::getItemName(int row) const
+{
+	if (row < rowCount() && (rowCount() > 0)) {
+		return itemRows[row];
+	} else {
+		return QString();
+	}
 }
