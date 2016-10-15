@@ -8,15 +8,28 @@ ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 
 void ShoppingList::newItem(QString itemName, double price, int amount)
 {
+	//find whether new row should be added, or whether we should change existing item
 	int row = 0;
-	bool newRow = false;
+	bool isNewRow = false;
 	if (!items.contains(itemName)) {
 		itemRows.push_back(itemName);
+		row = rowCount();
+		isNewRow = true;
+		beginInsertRows(QModelIndex(), row, row); //alert connected views
+	} else {
+		row = itemRows.lastIndexOf(itemName);
+		isNewRow = false;
 	}
 
-	//TODO: call correct rowChanged, rowInserted functions. 
 	setItemPrice(itemName, price);
 	setItemAmount(itemName, amount);
+
+	//alert connected views
+	if (isNewRow) {
+		endInsertRows(); //alert connected views
+	} else {
+		emit dataChanged(index(row, 0), index(row, NUM_SHOPPINGLIST_PROPERTIES));
+	}
 }
 
 void ShoppingList::setItemPrice(QString itemName, double price)
@@ -80,7 +93,11 @@ void ShoppingList::deleteItem(const QModelIndex &parent)
 
 int ShoppingList::rowCount(const QModelIndex &parent) const
 {
-	return items.size();
+	if (!parent.isValid()) {
+		return items.size();
+	}
+
+	return 0;
 }
 
 int ShoppingList::columnCount(const QModelIndex &parent) const
@@ -90,12 +107,8 @@ int ShoppingList::columnCount(const QModelIndex &parent) const
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
 {
-	if ((role == Qt::DisplayRole)) {
-		QString itemName = getItemName(index.row());
-		if (itemName == QString()) {
-			return QVariant(QVariant::Invalid);
-		}
-
+	QString itemName = getItemName(index.row());
+	if ((role == Qt::DisplayRole) && (itemName != QString())) {
 		ShoppingListItem item = items[itemName];
 		int column = index.column();
 
@@ -138,7 +151,7 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 
 QString ShoppingList::getItemName(int row) const
 {
-	if (row < rowCount() && (rowCount() > 0)) {
+	if ((row >= 0) && (row < rowCount()) && (rowCount() > 0)) {
 		return itemRows[row];
 	} else {
 		return QString();
