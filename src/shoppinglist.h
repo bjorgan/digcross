@@ -13,11 +13,6 @@ typedef struct {
 } ShoppingListItem;
 
 /**
- * Shopping list, ordered by shopping list item name.
- **/
-typedef QMap<QString, ShoppingListItem> ShoppingListData;
-
-/**
  * Data structure for containing a shoppinglist. Inherits from QAbstractTableModel, and is
  * thus ready for display in a QAbstractItemView-derived widget.
  **/
@@ -81,8 +76,8 @@ class ShoppingList : public QAbstractTableModel {
 		void setItemAmount(const QModelIndex &index, int amount);
 		void deleteItem(const QModelIndex &index);
 	private:
-		///List over shopping list entries
-		ShoppingListData items;
+		///List over shopping list entries, ordered by item name
+		QMap<QString, ShoppingListItem> items;
 		///Shopping list row numbers, for associating a well-defined row ordering with the shopping list
 		QVector<QString> itemRows;
 
