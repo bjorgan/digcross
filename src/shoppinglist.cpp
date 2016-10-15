@@ -48,14 +48,27 @@ void ShoppingList::setItemAmount(QString itemName, int amount)
 
 void ShoppingList::deleteItem(QString itemName)
 {
-	items.erase(items.find(itemName));
-	itemRows.erase(itemRows.begin() + itemRows.lastIndexOf(itemName));
+	if (items.contains(itemName)) {
+		int row = itemRows.lastIndexOf(itemName);
+		beginRemoveRows(QModelIndex(), row, row);
+
+		items.erase(items.find(itemName));
+		itemRows.erase(itemRows.begin() + row);
+
+		endRemoveRows();
+	}
 }
 
 void ShoppingList::wipeList()
 {
-	items.clear();
-	itemRows.clear();
+	if (items.size() > 0) {
+		beginRemoveRows(QModelIndex(), 0, rowCount()-1);
+
+		items.clear();
+		itemRows.clear();
+
+		endRemoveRows();
+	}
 }
 
 void ShoppingList::deleteLastAddedItem()
