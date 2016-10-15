@@ -113,7 +113,7 @@ class ShoppingList : public QAbstractTableModel {
 		void wipeList();
 
 		/**
-		 * Delete last added item.
+		 * Delete last added (new) item.
 		 **/
 		void deleteLastAddedItem();
 

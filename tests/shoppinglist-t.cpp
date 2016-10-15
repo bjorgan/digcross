@@ -113,6 +113,11 @@ void ShoppingListTest::testDeleteLastItem()
 	QCOMPARE(shoppingList->data(shoppingList->index(0, 0)).toString(), ITEM_1);
 	QCOMPARE(shoppingList->data(shoppingList->index(1, 0)).toString(), ITEM_2);
 	QCOMPARE(shoppingList->data(shoppingList->index(2, 0)).toString(), ITEM_3);
+
+	//test deleteLastItem on empty list
+	delete shoppingList;
+	shoppingList = new ShoppingList;
+	shoppingList->deleteLastAddedItem();
 }
 
 void ShoppingListTest::testGetTotalPrice()
