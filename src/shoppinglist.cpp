@@ -95,6 +95,15 @@ double ShoppingList::getTotalPrice()
 	return totalAmount;
 }
 
+QString ShoppingList::getItemName(int row) const
+{
+	if ((row >= 0) && (row < rowCount()) && (rowCount() > 0)) {
+		return itemRows[row];
+	} else {
+		return QString();
+	}
+}
+
 /**
  * QAbstractTableModel subclassing convenience functions.
  **/
@@ -169,13 +178,4 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 	}
 
 	return false;
-}
-
-QString ShoppingList::getItemName(int row) const
-{
-	if ((row >= 0) && (row < rowCount()) && (rowCount() > 0)) {
-		return itemRows[row];
-	} else {
-		return QString();
-	}
 }

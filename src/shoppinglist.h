@@ -46,12 +46,12 @@ class ShoppingList : public QAbstractTableModel {
 		 *
 		 * \param itemName Name of item (unique)
 		 * \param price Item price
-		 * \param amount Item amount
+		 * \param amount Item amount (number of items)
 		 **/
 		void newItem(QString itemName, double price, int amount = 1);
 
 		/**
-		 * Set new amount for item.
+		 * Set new amount of item.
 		 *
 		 * \param itemName Item name
 		 * \param amount Amount
