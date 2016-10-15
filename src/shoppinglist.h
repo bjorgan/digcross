@@ -19,6 +19,10 @@ typedef struct {
 
 typedef QMap<QString, ShoppingListItem> ShoppingListData;
 
+/**
+ * Data structure for containing a shoppinglist. Inherits from QAbstractTableModel, and is
+ * thus ready for display in a QAbstractItemView-derived widget.
+ **/
 class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
 	public:
@@ -30,7 +34,7 @@ class ShoppingList : public QAbstractTableModel {
 		double getTotalAmount();
 
 		/**
-		 * Neccessary functions for QAbstractTableModel subclassing (read-only).
+		 * Neccessary functions for QAbstractTableModel subclassing.
 		 **/
 		virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 		virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -57,9 +61,9 @@ class ShoppingList : public QAbstractTableModel {
 		void setItemAmount(QString itemName, int amount);
 
 		/**
-		 * Convenience function for setting amount from a view.
+		 * Convenience function for setting amount from a QAbstractItemView-derived class.
 		 *
-		 * \param parent Model index
+		 * \param index Model index
 		 * \param amount Amount
 		 **/
 		void setItemAmount(const QModelIndex &index, int amount);
@@ -72,9 +76,9 @@ class ShoppingList : public QAbstractTableModel {
 		void deleteItem(QString itemName);
 
 		/**
-		 * Convenience function for deleting item from list from a view.
+		 * Convenience function for deleting item from list from a QAbstractItemView-derived class.
 		 **/
-		void deleteItem(const QModelIndex &parent);
+		void deleteItem(const QModelIndex &index);
 
 		/**
 		 * Wipe entire shopping list.
@@ -88,7 +92,9 @@ class ShoppingList : public QAbstractTableModel {
 	private:
 		///List over shopping list entries
 		ShoppingListData items;
-		///Shopping list row number associated with each entry
+		///Shopping list row number associated with each entry in the
+		///shopping list, in order to have a well-defined ordering of
+		///the elements
 		QVector<QString> itemRows;
 
 		/**
@@ -99,5 +105,10 @@ class ShoppingList : public QAbstractTableModel {
 		 **/
 		void setItemPrice(QString itemName, double price);
 
+		/**
+		 * Get item name associated with a given position.
+		 *
+		 * \param row Row number
+		 **/
 		QString getItemName(int row) const;
 };
