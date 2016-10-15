@@ -30,8 +30,8 @@ void ShoppingListTest::testNewItem()
 	delete shoppingList;
 	shoppingList = new ShoppingList;
 
-	QString item_1 = "test_item";
-	QString item_2 = "test_item_2";
+	QString item_1 = "test_item_c";
+	QString item_2 = "test_item_b";
 
 	double price = 20.0;
 	int amount = 10;
@@ -45,7 +45,7 @@ void ShoppingListTest::testNewItem()
 	QCOMPARE(shoppingList->rowCount(), 1);
 	shoppingList->newItem(item_2, price, amount);
 	QCOMPARE(shoppingList->rowCount(), 2);
-	QCOMPARE(shoppingList->data(shoppingList->index(1, 0)).toString(), item_1);
+	QCOMPARE(shoppingList->data(shoppingList->index(1, 0)).toString(), item_2);
 
 	//verify the other elements
 	QCOMPARE(shoppingList->data(shoppingList->index(1, 1)).toDouble(), price);
