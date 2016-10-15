@@ -15,28 +15,21 @@ ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 
 void ShoppingList::newItem(QString itemName, double price, int amount)
 {
-	//find whether new row should be added, or whether we should change existing item
-	int row = 0;
-	bool isNewRow = false;
-	if (!items.contains(itemName)) {
+	if (!items.contains(itemName)) { //item is new, will insert new row
 		itemRows.push_back(itemName);
-		row = rowCount();
-		isNewRow = true;
-		beginInsertRows(QModelIndex(), row, row); //alert connected views
-	} else {
-		row = itemRows.lastIndexOf(itemName);
-		isNewRow = false;
-	}
+		int row = rowCount();
 
-	//add/change item
-	setItemPrice(itemName, price);
-	setItemAmount(itemName, amount);
+		beginInsertRows(QModelIndex(), row, row);
+		setItemPrice(itemName, price);
+		setItemAmount(itemName, amount);
+		endInsertRows();
+	} else if (items[itemName].price == price) { //item exists, will add to the existing amount
+		int row = itemRows.lastIndexOf(itemName);
 
-	//alert connected views
-	if (isNewRow) {
-		endInsertRows(); //alert connected views
-	} else {
+		setItemAmount(itemName, items[itemName].amount + amount);
 		emit dataChanged(index(row, 0), index(row, NUM_SHOPPINGLIST_PROPERTIES));
+	} else { //ignore new item, price was not the same
+		return;
 	}
 }
 
