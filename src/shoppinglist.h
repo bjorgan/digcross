@@ -1,5 +1,5 @@
 #include <QObject>
-#include <QAbstractItemModel>
+#include <QAbstractTableModel>
 #include <QMap>
 
 /**

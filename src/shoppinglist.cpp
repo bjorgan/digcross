@@ -1,6 +1,4 @@
 #include "shoppinglist.h"
-#include <iostream>
-#include <QHash>
 
 ///Number of properties associated with each shopping list item (price, name, amount)
 const int NUM_SHOPPINGLIST_PROPERTIES = 3;
