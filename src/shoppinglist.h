@@ -18,8 +18,7 @@ typedef struct {
  *
  * New items should be added by connecting to the ShoppingList::newItem()-SLOT.
  *
- * ShoppingList will notify any containing View with changes when any modifications
- * are made to the list.
+ * ShoppingList will notify any connected View with changes.
  **/
 class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
