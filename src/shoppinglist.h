@@ -2,15 +2,6 @@
 #include <QAbstractItemModel>
 #include <QMap>
 
-///Number of properties associated with each shopping list item (price, name, amount)
-const int NUM_SHOPPINGLIST_PROPERTIES = 3;
-///Column index for name in shopping list model
-#define ITEM_NAME_COL 0
-///Column index for price in shopping list model
-#define ITEM_PRICE_COL 1
-///Column index for amount in shopping list model
-#define ITEM_AMOUNT_COL 2
-
 /**
  * Item in shopping list.
  **/
