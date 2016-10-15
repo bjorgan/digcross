@@ -109,7 +109,7 @@ void ShoppingListTest::testDeleteLastItem()
 	QCOMPARE(shoppingList->data(shoppingList->index(2, 0)).toString(), ITEM_3);
 }
 
-void ShoppingListTest::testGetTotalAmount()
+void ShoppingListTest::testGetTotalPrice()
 {
 	shoppingList->wipeList();
 	QCOMPARE(shoppingList->rowCount(), 0);
@@ -117,11 +117,11 @@ void ShoppingListTest::testGetTotalAmount()
 	int amount = 20;
 	double price = 20;
 	shoppingList->newItem(ITEM_1, price, amount);
-	QCOMPARE(shoppingList->getTotalAmount(), price*amount*1.0);
+	QCOMPARE(shoppingList->getTotalPrice(), price*amount*1.0);
 	shoppingList->newItem(ITEM_2, price, amount);
-	QCOMPARE(shoppingList->getTotalAmount(), 2*price*amount*1.0);
+	QCOMPARE(shoppingList->getTotalPrice(), 2*price*amount*1.0);
 	shoppingList->newItem(ITEM_3, price, amount);
-	QCOMPARE(shoppingList->getTotalAmount(), 3*price*amount*1.0);
+	QCOMPARE(shoppingList->getTotalPrice(), 3*price*amount*1.0);
 }
 
 QTEST_MAIN(ShoppingListTest)

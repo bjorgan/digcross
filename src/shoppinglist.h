@@ -11,12 +11,19 @@ const int NUM_SHOPPINGLIST_PROPERTIES = 3;
 ///Column index for amount in shopping list model
 #define ITEM_AMOUNT_COL 2
 
-
+/**
+ * Item in shopping list.
+ **/
 typedef struct {
+	///Amount of item
 	int amount;
+	///Price of item
 	double price;
 } ShoppingListItem;
 
+/**
+ * Shopping list, ordered by shopping list item name.
+ **/
 typedef QMap<QString, ShoppingListItem> ShoppingListData;
 
 /**
@@ -29,9 +36,9 @@ class ShoppingList : public QAbstractTableModel {
 		ShoppingList(QObject *parent = NULL);
 
 		/**
-		 * Get total amount in shopping list.
+		 * Get total price of all items in shopping list.
 		 **/
-		double getTotalAmount();
+		double getTotalPrice();
 
 		/**
 		 * Neccessary functions for QAbstractTableModel subclassing.
@@ -61,24 +68,11 @@ class ShoppingList : public QAbstractTableModel {
 		void setItemAmount(QString itemName, int amount);
 
 		/**
-		 * Convenience function for setting amount from a QAbstractItemView-derived class.
-		 *
-		 * \param index Model index
-		 * \param amount Amount
-		 **/
-		void setItemAmount(const QModelIndex &index, int amount);
-
-		/**
 		 * Delete item from shopping list.
 		 *
 		 * \param itemName Item
 		 **/
 		void deleteItem(QString itemName);
-
-		/**
-		 * Convenience function for deleting item from list from a QAbstractItemView-derived class.
-		 **/
-		void deleteItem(const QModelIndex &index);
 
 		/**
 		 * Wipe entire shopping list.
@@ -89,12 +83,16 @@ class ShoppingList : public QAbstractTableModel {
 		 * Delete last added item.
 		 **/
 		void deleteLastAddedItem();
+
+		/**
+		 * Convenience functions for QAbstractItemView-derived subclasses.
+		 **/
+		void setItemAmount(const QModelIndex &index, int amount);
+		void deleteItem(const QModelIndex &index);
 	private:
 		///List over shopping list entries
 		ShoppingListData items;
-		///Shopping list row number associated with each entry in the
-		///shopping list, in order to have a well-defined ordering of
-		///the elements
+		///Shopping list row numbers, for associating a well-defined row ordering with the shopping list
 		QVector<QString> itemRows;
 
 		/**

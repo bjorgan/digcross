@@ -14,7 +14,7 @@ class ShoppingListTest : public QObject {
 		void testDeleteItem();
 		void testWipeList();
 		void testDeleteLastItem();
-		void testGetTotalAmount();
+		void testGetTotalPrice();
 	private:
 		ShoppingList *shoppingList;
 };

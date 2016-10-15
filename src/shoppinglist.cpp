@@ -76,7 +76,7 @@ void ShoppingList::deleteLastAddedItem()
 	deleteItem(getItemName(rowCount()-1));
 }
 
-double ShoppingList::getTotalAmount()
+double ShoppingList::getTotalPrice()
 {
 	double totalAmount = 0;
 	for (int i=0; i < rowCount(); i++) {
