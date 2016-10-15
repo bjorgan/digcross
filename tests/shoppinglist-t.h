@@ -2,7 +2,6 @@
 #include <QtTest/QTest>
 
 class ShoppingList;
-class QTableView;
 
 class ShoppingListTest : public QObject {
 	Q_OBJECT
