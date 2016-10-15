@@ -47,10 +47,17 @@ void ShoppingList::wipeList()
 
 void ShoppingList::deleteLastAddedItem()
 {
+	deleteItem(getItemName(rowCount()-1));
 }
 
 double ShoppingList::getTotalAmount()
 {
+	double totalAmount = 0;
+	for (int i=0; i < rowCount(); i++) {
+		ShoppingListItem item = items[getItemName(i)];
+		totalAmount += item.first*item.second;
+	}
+	return totalAmount;
 }
 
 /**
