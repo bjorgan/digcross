@@ -15,6 +15,8 @@ typedef struct {
 /**
  * Data structure for containing a shoppinglist. Inherits from QAbstractTableModel, and is
  * thus ready for display in a QAbstractItemView-derived widget.
+ *
+ * New items should be added by connecting to the ShoppingList::newItem()-SLOT.
  **/
 class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
@@ -79,12 +81,14 @@ class ShoppingList : public QAbstractTableModel {
 		virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 	public slots:
 		/**
-		 * Add new item to shopping list. (Will replace any existing items
-		 * with same name.)
+		 * Add new item to shopping list. Item names function as unique identifiers:
+		 * 	- If the price is the same: Assumed that the item is the same, the input amount is
+		 * 	  added to the existing item amount
+		 * 	- If the price is different: This should happen, so the new item is ignored. :-P
 		 *
 		 * \param itemName Name of item (unique)
 		 * \param price Item price
-		 * \param amount Item amount (number of items)
+		 * \param amount Item amount (number of items, is accumulated to the item each time the SLOT is called)
 		 **/
 		void newItem(QString itemName, double price, int amount = 1);
 
