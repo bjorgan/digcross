@@ -37,8 +37,8 @@ class ShoppingList : public QAbstractTableModel {
 		virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 		virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 		virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-		bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-		Qt::ItemFlags flags(const QModelIndex &index) const;
+		virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+		virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 	public slots:
 		/**
 		 * Add new item to shopping list. (Will replace any existing items
