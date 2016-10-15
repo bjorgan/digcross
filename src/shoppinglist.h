@@ -17,6 +17,9 @@ typedef struct {
  * thus ready for display in a QAbstractItemView-derived widget.
  *
  * New items should be added by connecting to the ShoppingList::newItem()-SLOT.
+ *
+ * ShoppingList will notify any containing View with changes when any modifications
+ * are made to the list.
  **/
 class ShoppingList : public QAbstractTableModel {
 	Q_OBJECT
