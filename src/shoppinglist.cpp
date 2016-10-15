@@ -22,14 +22,14 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 void ShoppingList::setItemPrice(QString itemName, double price)
 {
 	if (price > 0) {
-		items[itemName].second = price;
+		items[itemName].price = price;
 	}
 }
 
 void ShoppingList::setItemAmount(QString itemName, int amount)
 {
 	if (amount > 0) {
-		items[itemName].first = amount;
+		items[itemName].amount = amount;
 	}
 }
 
@@ -55,7 +55,7 @@ double ShoppingList::getTotalAmount()
 	double totalAmount = 0;
 	for (int i=0; i < rowCount(); i++) {
 		ShoppingListItem item = items[getItemName(i)];
-		totalAmount += item.first*item.second;
+		totalAmount += item.amount*item.price;
 	}
 	return totalAmount;
 }
@@ -103,9 +103,9 @@ QVariant ShoppingList::data(const QModelIndex &index, int role) const
 			case ITEM_NAME_COL:
 				return itemName;
 			case ITEM_PRICE_COL:
-				return item.second;
+				return item.price;
 			case ITEM_AMOUNT_COL:
-				return item.first;
+				return item.amount;
 		}
 	}
 

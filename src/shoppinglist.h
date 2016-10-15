@@ -11,7 +11,12 @@ const int NUM_SHOPPINGLIST_PROPERTIES = 3;
 ///Column index for amount in shopping list model
 #define ITEM_AMOUNT_COL 2
 
-typedef std::pair<int, double> ShoppingListItem;
+
+typedef struct {
+	int amount;
+	double price;
+} ShoppingListItem;
+
 typedef QMap<QString, ShoppingListItem> ShoppingListData;
 
 class ShoppingList : public QAbstractTableModel {
@@ -84,7 +89,6 @@ class ShoppingList : public QAbstractTableModel {
 		///List over shopping list entries
 		ShoppingListData items;
 		///Shopping list row number associated with each entry
-//		ShoppingListDataRows itemRows;
 		QVector<QString> itemRows;
 
 		/**
