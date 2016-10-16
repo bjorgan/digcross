@@ -135,7 +135,7 @@ QVariant ShoppingList::data(const QModelIndex &index, int role) const
 			case ITEM_NAME_COL:
 				return itemName;
 			case ITEM_PRICE_COL:
-				return item.price;
+				return item.amount*item.price;
 			case ITEM_AMOUNT_COL:
 				return item.amount;
 		}
@@ -197,11 +197,12 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const Q_DECL_OVERRIDE
 {
 	QStyleOptionViewItem option = inputOption;
-	option.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
 	if (index.column() == ITEM_AMOUNT_COL) {
+		option.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " x ");
 	} else if (index.column() == ITEM_PRICE_COL) {
-		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " kr");
+		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+		painter->drawText(option.rect, option.displayAlignment, "(" + index.data().toString() + " kr)");
 	} else {
 		QStyledItemDelegate::paint(painter, inputOption, index);
 	}
@@ -215,14 +216,31 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->setAlternatingRowColors(true);
 	listView->setGridStyle(Qt::NoPen);
 	listView->setModel(list);
+	listView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+	listView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+	listView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
 
 	//use custom delegate for displaying each item
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
+	//current sum
+	QLabel *sumLabel = new QLabel(tr("Sum: "));
+	QLabel *currencyLabel = new QLabel("kr");
+	QLabel *currentTotalPrice = new QLabel("0");
+
 	//layout
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Sum: ")), 0, 0);
-	QLabel *currSum = new QLabel("0");
-	layout->addWidget(currSum, 0, 1);
-	layout->addWidget(listView, 1, 0, 1, 2);
+	int row = 0;
+	int col = 0;
+
+	layout->addWidget(listView, row, col, 1, 3);
+	layout->addWidget(sumLabel, ++row, col);
+	layout->addWidget(currentTotalPrice, row, ++col);
+	layout->setColumnStretch(col, 0);
+	layout->addWidget(currencyLabel, row, ++col);
+	layout->setColumnStretch(col, 0);
+
+	layout->setAlignment(sumLabel, Qt::AlignLeft);
+	layout->setAlignment(currentTotalPrice, Qt::AlignRight);
+	layout->setAlignment(currencyLabel, Qt::AlignRight);
 }

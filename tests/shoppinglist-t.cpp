@@ -48,7 +48,7 @@ void ShoppingListTest::testNewItem()
 	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_NAME_COL)).toString(), item_2);
 
 	//verify the other elements
-	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble(), price);
+	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble(), price*amount);
 	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_AMOUNT_COL)).toInt(), amount);
 
 	//add item with same name, verify it doesn't overwrite the former item when price is different
@@ -56,13 +56,13 @@ void ShoppingListTest::testNewItem()
 	int amount_2 = 30;
 	shoppingList->newItem(item_2, price_2, amount_2);
 	QCOMPARE(shoppingList->numItems(), 2);
-	QVERIFY(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble() != price_2);
+	QVERIFY(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble() != price_2*amount_2);
 	QVERIFY(shoppingList->data(shoppingList->index(1, ITEM_AMOUNT_COL)).toInt() != amount_2);
 
 	//add item with same name, verify that it adds to the amount when the price is the same
 	shoppingList->newItem(item_2, price, amount_2);
 	QCOMPARE(shoppingList->numItems(), 2);
-	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble(), price);
+	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_PRICE_COL)).toDouble(), price*(amount + amount_2));
 	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_AMOUNT_COL)).toInt(), amount + amount_2);
 }
 
