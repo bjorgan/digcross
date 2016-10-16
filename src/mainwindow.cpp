@@ -23,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
 	ShoppingListWidget *shoppingListWidget = new ShoppingListWidget(list);
 	layout->addWidget(shoppingListWidget);
 
-	//FIXME: Populate with some example data.
+	//Populate with some example data.
+	//Menu class will have to connect to ShoppingList::newItem().
 	list->newItem("Brus", 15, 2);
 	list->newItem("Godterisopp", 2, 35);
 	list->newItem("Kvikklunsj", 10, 1);
