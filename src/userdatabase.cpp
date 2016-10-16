@@ -21,7 +21,7 @@
 
 
 
-userDatabase::userDatabase(const QString &path)
+UserDatabase::UserDatabase(QString path)
 {
 	m_db = QSqlDatabase::addDatabase("QSQLITE");
 	m_db.setDatabaseName(path);
@@ -37,7 +37,7 @@ userDatabase::userDatabase(const QString &path)
 
 }
 
-userDatabase::~userDatabase()
+UserDatabase::~UserDatabase()
 {
 	if (m_db.isOpen())
 		{
@@ -45,7 +45,7 @@ userDatabase::~userDatabase()
 		}
 }
 
-bool userDatabase::usernameExists(const QString& USER_ID)
+bool UserDatabase::usernameExists(QString username)
 {
 	bool not_exists = false;
 
@@ -67,13 +67,13 @@ bool userDatabase::usernameExists(const QString& USER_ID)
 	return not_exists;
 }
 
-bool userDatabase::cardExists(const QString& CARD_ID)
+bool UserDatabase::cardExists(QString card_id)
 {
 
 
 }
 
-bool userDatabase::addUsername(const QString& name)
+bool UserDatabase::addUsername(QString username)
 {
 	bool success = false;
 	//Verify that username is real and part of pool. Do query against ufs for

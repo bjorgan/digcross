@@ -3,69 +3,67 @@
 #include <QSqlRecord>
 #include <QDebug>
 
-class userDatabase
+class UserDatabase
 {
 public:
 	/**
-	 * @brief Constructor
 	 * Constructor sets up connection with db and opens it
-	 * @param path - absolute path to db file
+	 * /param path - absolute path to db file
 	 */
-	userDatabase(QString path);
+	UserDatabase(QString path);
 
 	/**
-	 * @brief Destructor
-	 * Close the db connection
+	 * Destructor, closes the db connection
 	 */
-	~userDatabase();
+	~UserDatabase();
 	/**
-	 * @brief Create new row in database, populate with USER_ID
-	 * @param USER_ID - username of new user
-	 * @return 0 - SUCCESS - user successfully created
+	 * Create new row in database, populate with USER_ID
+	 * /param username - username of new user
+	 *        card_id - optional parameter for card
+	 * /return 0 - SUCCESS - user successfully created
 	 *         1 - USER_EXISTS_ERROR - user already exists
 	 */
-	int createUser(QString username);
+	int createUser(QString username, QString card_id = QString());
 
 	/**
-	 * @brief Delete user
-	 * @param USER_ID - username to delete
-	 * @return 0 - SUCCESS - User successfully deleted
+	 * Delete user
+	 * /param username - username to delete
+	 * /return 0 - SUCCESS - User successfully deleted
 	 *  	   2 - NO_USER_ERROR - user does not exist
 	 */
 	int deleteUser(QString username);
 	/**
-	 * @brief Edit card information for user
-	 * @param USER_ID - username to change card info for
-	 * 	  CARD_ID - card info
-	 * @return 0 - SUCCESS - Card id for user successfully updated
+	 * Change card information for user
+	 * /param username - username to change card info for
+	 * 	  card_id - card info
+	 * /return 0 - SUCCESS - Card id for user successfully updated
 	 *         2 - NO_USER_ERROR - user does not exist
 	 *         3 - CARD_OWNED_ERROR - card associated with different user
 	 */
-	int editCard(QString username, QString card_id);
+	int changeCard(QString username, QString card_id);
 
 	/**
-	 * @brief Find username associated to card
-	 * @param CARD_ID - The card to investigate
-	 *        result - Pointer which will be populated with username if SUCCESS
-	 * @return 0 - SUCCESS - username associated with card written to result
-	 * 	   4 - NO_USER_ERROR - No users associated with card, result populated with "error"
+	 * Find username associated to card
+	 * /param card_id - The card to investigate
+	 * /return username for user associated with card_id
+	 *         if no users are associated with card it will fill the return value with "NO_USER_ERROR"
 	 */
-	int findUser(const QString& card_id, const QString *result);
+	QString findUser(const QString& card_id);
 
 private:
 	QSqlDatabase m_db;
 	
 	/**
-	 * @brief Check if user exists in db
-	 * @param USER_ID - username to check
-	 * @return true - person exists, false - person does not exist
+	 * Check if user exists in db
+	 * /param username - username to check
+	 * /return true - person exists, false - person does not exist
 	 */
 	bool usernameExists(QString username);        
 
 	/**
-	 * @brief Check if card exists in db
-	 * @param CARD_ID - card to check
-	 * @return true - card exists, false - card does not exist
+	 * Check if card exists in db
+	 * /param card_id - card to check
+	 * /return true - card exists, false - card does not exist
 	 */
 	bool cardExists( QString card_id);		
 }
