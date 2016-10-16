@@ -40,6 +40,11 @@ class ShoppingList : public QAbstractTableModel {
 		double getTotalPrice();
 
 		/**
+		 * Get number of items in shopping list.
+		 **/
+		int numItems() const;
+
+		/**
 		 * \defgroup TableModelFunctions QAbstractTableModel subclassing
 		 * Functions related to the QAbstractTableModel subclassing.
 		 **/

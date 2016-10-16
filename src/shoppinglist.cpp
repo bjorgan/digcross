@@ -101,6 +101,11 @@ void ShoppingList::deleteItem(const QModelIndex &parent)
 	deleteItem(getItemName(parent.row()));
 }
 
+int ShoppingList::numItems() const
+{
+	return items.size();
+}
+
 /**
  * Neccessary functions for QAbstractTableModel subclassing.
  **/
@@ -108,7 +113,7 @@ void ShoppingList::deleteItem(const QModelIndex &parent)
 int ShoppingList::rowCount(const QModelIndex &parent) const
 {
 	if (!parent.isValid()) {
-		return items.size();
+		return numItems();
 	}
 
 	return 0;
@@ -189,13 +194,16 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 {
 }
 
-void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
+void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const Q_DECL_OVERRIDE
 {
+	QStyleOptionViewItem option = inputOption;
+	option.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
 	if (index.column() == ITEM_AMOUNT_COL) {
 		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " x ");
 	} else if (index.column() == ITEM_PRICE_COL) {
+		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " kr");
 	} else {
-		QStyledItemDelegate::paint(painter, option, index);
+		QStyledItemDelegate::paint(painter, inputOption, index);
 	}
 }
 
