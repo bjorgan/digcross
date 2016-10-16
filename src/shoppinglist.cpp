@@ -117,7 +117,7 @@ int ShoppingList::rowCount(const QModelIndex &parent) const
 
 int ShoppingList::columnCount(const QModelIndex &parent) const
 {
-	return NUM_SHOPPINGLIST_PROPERTIES + 1;
+	return NUM_SHOPPINGLIST_PROPERTIES + 1; //an extra column for displaying a delete button
 }
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
