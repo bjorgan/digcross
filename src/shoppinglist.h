@@ -193,6 +193,9 @@ class QLabel;
  * Shopping list widget. Uses a QTableView to display the supplied
  * shopping list data model. Uses ShoppingListItemDelegate to draw
  * each shopping list item.
+ *
+ * This is the class that is used for /drawing/ the shopping list,
+ * while all shopping list /data handling/ is done in ShoppingList.
  **/
 class ShoppingListWidget : public QWidget {
 	Q_OBJECT
