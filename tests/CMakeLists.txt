@@ -9,10 +9,14 @@ MACRO (add_qt_test testname testsrc)
 
 	include_directories(../daemon)
 
-	add_executable(test_${testname} ${test_${testname}_SRCS} ../src/daemon_client.cpp ../src/cardreader.cpp)
-	target_link_libraries(test_${testname} Qt5::Test Qt5::DBus Qt5::Widgets)
+	add_executable(test_${testname} ${test_${testname}_SRCS})
+	target_link_libraries(test_${testname} Qt5::Test Qt5::DBus Qt5::Widgets digcross_test_common)
 	ADD_TEST(test_${testname} test_${testname})
 ENDMACRO (add_qt_test)
 
+add_library(digcross_test_common ../src/daemon_client.cpp ../src/cardreader.cpp ../src/shoppinglist.cpp)
+target_link_libraries(digcross_test_common Qt5::Test Qt5::DBus Qt5::Widgets)
+
 add_qt_test(daemonclient daemon_client-t.cpp)
 add_qt_test(cardreader cardreader-t.cpp)
+add_qt_test(shoppinglist shoppinglist-t.cpp)
