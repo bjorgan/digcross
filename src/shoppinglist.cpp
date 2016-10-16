@@ -69,11 +69,6 @@ void ShoppingList::wipeList()
 	}
 }
 
-void ShoppingList::deleteLastAddedItem()
-{
-	deleteItem(getItemName(numItems()-1));
-}
-
 double ShoppingList::getTotalPrice()
 {
 	double totalAmount = 0;
@@ -96,11 +91,6 @@ QString ShoppingList::getItemName(int row) const
 /**
  * QAbstractTableModel subclassing convenience functions.
  **/
-
-void ShoppingList::setItemAmount(const QModelIndex &parent, int amount)
-{
-	setItemAmount(getItemName(parent.row()), amount);
-}
 
 void ShoppingList::deleteItem(const QModelIndex &parent)
 {
@@ -216,6 +206,9 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 		//draw price + "kr"
 		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, "(" + index.data().toString() + " kr)");
+	} else if (index.column() == ITEM_NAME_COL) {
+		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+		painter->drawText(option.rect, option.displayAlignment, index.data().toString());
 	} else if (index.column() == ITEM_DELETEBUTTON_COL) {
 		//draw delete button in its assigned column
 		QStyleOptionButton buttonOptions;
@@ -235,6 +228,7 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	//view for displaying shopping list
 	QTableView *listView = new QTableView;
 	listView->verticalHeader()->hide();
+	listView->horizontalHeader()->hide();
 	listView->setAlternatingRowColors(true);
 	listView->setGridStyle(Qt::NoPen);
 	listView->setModel(list);
@@ -244,6 +238,7 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	//use custom delegate for displaying each item
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
+	//buttons and labellzzz
 	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
 	currentTotalPrice = new QLabel;
 

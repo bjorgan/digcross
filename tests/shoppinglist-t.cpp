@@ -102,24 +102,6 @@ void ShoppingListTest::testWipeList()
 	QCOMPARE(shoppingList->numItems(), 0);
 }
 
-void ShoppingListTest::testDeleteLastItem()
-{
-	shoppingList->newItem("something_different", 20, 20);
-	QCOMPARE(shoppingList->numItems(), 4);
-
-	//verify that last item was deleted
-	shoppingList->deleteLastAddedItem();
-	QCOMPARE(shoppingList->numItems(), 3);
-	QCOMPARE(shoppingList->data(shoppingList->index(0, ITEM_NAME_COL)).toString(), ITEM_1);
-	QCOMPARE(shoppingList->data(shoppingList->index(1, ITEM_NAME_COL)).toString(), ITEM_2);
-	QCOMPARE(shoppingList->data(shoppingList->index(2, ITEM_NAME_COL)).toString(), ITEM_3);
-
-	//test deleteLastItem on empty list
-	delete shoppingList;
-	shoppingList = new ShoppingList;
-	shoppingList->deleteLastAddedItem();
-}
-
 void ShoppingListTest::testGetTotalPrice()
 {
 	shoppingList->wipeList();

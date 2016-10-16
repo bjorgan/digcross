@@ -137,20 +137,6 @@ class ShoppingList : public QAbstractTableModel {
 		void wipeList();
 
 		/**
-		 * Delete last added (new) item.
-		 **/
-		void deleteLastAddedItem();
-
-		/**
-		 * \ingroup TableModelFunctions
-		 * Convenience function for setting item amount from a QAbstractItemView-derived subclass.
-		 *
-		 * \param index Item index, see documentation for data()
-		 * \param amount New amount of item at the specified row-number
-		 **/
-		void setItemAmount(const QModelIndex &index, int amount);
-
-		/**
 		 * \ingroup TableModelFunctions
 		 * Convenience function for deleting an item from a QAbstractItemView-derived subclass.
 		 *

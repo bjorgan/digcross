@@ -33,11 +33,6 @@ class ShoppingListTest : public QObject {
 		void testWipeList();
 
 		/**
-		 * Check that last item was deleted.
-		 **/
-		void testDeleteLastItem();
-
-		/**
 		 * Check that calculated total price is correct.
 		 **/
 		void testGetTotalPrice();
