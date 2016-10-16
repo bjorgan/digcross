@@ -4,6 +4,8 @@
 
 ///Number of properties associated with each shopping list item (price, name, amount)
 const int NUM_SHOPPINGLIST_PROPERTIES = 3;
+///Column index for row delete button
+#define ITEM_DELETEBUTTON_COL 3
 ///Column index for name in shopping list model
 #define ITEM_NAME_COL 1
 ///Column index for price in shopping list model

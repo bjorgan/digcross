@@ -18,7 +18,7 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 		int row = itemRows.lastIndexOf(itemName);
 
 		setItemAmount(itemName, items[itemName].amount + amount);
-		emit dataChanged(index(row, 0), index(row, NUM_SHOPPINGLIST_PROPERTIES));
+		emit dataChanged(index(row, 0), index(row, columnCount()));
 	} else { //ignore new item, price was not the same
 		return;
 	}
@@ -50,6 +50,8 @@ void ShoppingList::deleteItem(QString itemName)
 		itemRows.erase(itemRows.begin() + row);
 
 		endRemoveRows();
+
+		emit totalPriceChanged();
 	}
 }
 
@@ -62,6 +64,8 @@ void ShoppingList::wipeList()
 		itemRows.clear();
 
 		endRemoveRows();
+
+		emit totalPriceChanged();
 	}
 }
 
@@ -123,7 +127,7 @@ int ShoppingList::rowCount(const QModelIndex &parent) const
 
 int ShoppingList::columnCount(const QModelIndex &parent) const
 {
-	return NUM_SHOPPINGLIST_PROPERTIES;
+	return NUM_SHOPPINGLIST_PROPERTIES + 1;
 }
 
 QVariant ShoppingList::data(const QModelIndex &index, int role) const
@@ -166,6 +170,7 @@ QVariant ShoppingList::headerData(int section, Qt::Orientation orientation, int 
 			case ITEM_AMOUNT_COL:
 				return QVariant(tr("Amount"));
 		}
+		return QVariant("");
 	}
 
 	return QAbstractTableModel::headerData(section, orientation, role);
@@ -192,6 +197,9 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 #include <QLabel>
 #include <QHeaderView>
 #include <QPainter>
+#include <QPushButton>
+#include <QApplication>
+#include <QStyleOptionButton>
 
 ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
@@ -201,11 +209,22 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 {
 	QStyleOptionViewItem option = inputOption;
 	if (index.column() == ITEM_AMOUNT_COL) {
+		//draw amount + "x"
 		option.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " x ");
 	} else if (index.column() == ITEM_PRICE_COL) {
+		//draw price + "kr"
 		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, "(" + index.data().toString() + " kr)");
+	} else if (index.column() == ITEM_DELETEBUTTON_COL) {
+		//draw delete button in its assigned column
+		QStyleOptionButton buttonOptions;
+		buttonOptions.features = QStyleOptionButton::Flat;
+		buttonOptions.rect = inputOption.rect;
+		buttonOptions.state = QStyle::State_Enabled;
+		buttonOptions.icon = qApp->style()->standardIcon(QStyle::SP_DialogCancelButton);
+		buttonOptions.iconSize = inputOption.rect.size();
+		qApp->style()->drawControl(QStyle::CE_PushButton, &buttonOptions, painter);
 	} else {
 		QStyledItemDelegate::paint(painter, inputOption, index);
 	}
@@ -219,14 +238,13 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->setAlternatingRowColors(true);
 	listView->setGridStyle(Qt::NoPen);
 	listView->setModel(list);
-	listView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-	listView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-	listView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+	listView->horizontalHeader()->setSectionResizeMode(ITEM_PRICE_COL, QHeaderView::Stretch);
+	listView->resizeColumnToContents(ITEM_DELETEBUTTON_COL);
 
 	//use custom delegate for displaying each item
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
-	//current sum
+	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
 	currentTotalPrice = new QLabel;
 
 	//layout
@@ -234,17 +252,19 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	int row = 0;
 	int col = 0;
 
-	layout->addWidget(listView, row, col);
+	layout->addWidget(listView, row, col, 1, 2);
 	layout->addWidget(currentTotalPrice, ++row, col, Qt::AlignLeft);
+	layout->addWidget(wipeButton, row, ++col, Qt::AlignRight);
 
 	updateDisplayPrice();
 
 	//connections
 	connect(list, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
+	connect(wipeButton, SIGNAL(clicked()), list, SLOT(wipeList()));
 }
 
 void ShoppingListWidget::updateDisplayPrice()
 {
 	double currPrice = shoppingList->getTotalPrice();
-	currentTotalPrice->setText("Sum: " + QString::number(currPrice) + "kr");
+	currentTotalPrice->setText("Sum: " + QString::number(currPrice) + " kr");
 }
