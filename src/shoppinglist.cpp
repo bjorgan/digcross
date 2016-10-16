@@ -22,6 +22,8 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 	} else { //ignore new item, price was not the same
 		return;
 	}
+
+	emit totalPriceChanged();
 }
 
 void ShoppingList::setItemPrice(QString itemName, double price)
@@ -178,6 +180,7 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 	if (index.column() == ITEM_AMOUNT_COL) {
 		setItemAmount(getItemName(index.row()), value.toInt());
 		emit dataChanged(index, index);
+		emit totalPriceChanged();
 		return true;
 	}
 
@@ -208,7 +211,7 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 	}
 }
 
-ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent)
+ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent), shoppingList(list)
 {
 	//view for displaying shopping list
 	QTableView *listView = new QTableView;
@@ -224,23 +227,24 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
 	//current sum
-	QLabel *sumLabel = new QLabel(tr("Sum: "));
-	QLabel *currencyLabel = new QLabel("kr");
-	QLabel *currentTotalPrice = new QLabel("0");
+	currentTotalPrice = new QLabel;
 
 	//layout
 	QGridLayout *layout = new QGridLayout(this);
 	int row = 0;
 	int col = 0;
 
-	layout->addWidget(listView, row, col, 1, 3);
-	layout->addWidget(sumLabel, ++row, col);
-	layout->addWidget(currentTotalPrice, row, ++col);
-	layout->setColumnStretch(col, 0);
-	layout->addWidget(currencyLabel, row, ++col);
-	layout->setColumnStretch(col, 0);
+	layout->addWidget(listView, row, col);
+	layout->addWidget(currentTotalPrice, ++row, col, Qt::AlignLeft);
 
-	layout->setAlignment(sumLabel, Qt::AlignLeft);
-	layout->setAlignment(currentTotalPrice, Qt::AlignRight);
-	layout->setAlignment(currencyLabel, Qt::AlignRight);
+	updateDisplayPrice();
+
+	//connections
+	connect(list, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
+}
+
+void ShoppingListWidget::updateDisplayPrice()
+{
+	double currPrice = shoppingList->getTotalPrice();
+	currentTotalPrice->setText("Sum: " + QString::number(currPrice) + "kr");
 }

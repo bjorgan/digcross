@@ -175,10 +175,17 @@ class ShoppingList : public QAbstractTableModel {
 		 * \param row Row number
 		 **/
 		QString getItemName(int row) const;
+	signals:
+		/**
+		 * Emitted whenever the total price changes. Emitted from newItem() and setData().
+		 **/
+		void totalPriceChanged();
 };
 
 #include <QWidget>
 #include <QStyledItemDelegate>
+
+class QLabel;
 
 class ShoppingListItemDelegate : public QStyledItemDelegate {
 	Q_OBJECT
@@ -192,4 +199,9 @@ class ShoppingListWidget : public QWidget {
 	Q_OBJECT
 	public:
 		ShoppingListWidget(ShoppingList *list, QWidget *parent = NULL);
+	private:
+		ShoppingList *shoppingList;
+		QLabel *currentTotalPrice;
+	private slots:
+		void updateDisplayPrice();
 };
