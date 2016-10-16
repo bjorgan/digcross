@@ -156,3 +156,20 @@ class ShoppingList : public QAbstractTableModel {
 		 **/
 		QString getItemName(int row) const;
 };
+
+#include <QWidget>
+#include <QStyledItemDelegate>
+
+class ShoppingListItemDelegate : public QStyledItemDelegate {
+	Q_OBJECT
+	public:
+		ShoppingListItemDelegate(QObject *parent = NULL);
+		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+};
+
+
+class ShoppingListWidget : public QWidget {
+	Q_OBJECT
+	public:
+		ShoppingListWidget(ShoppingList *list, QWidget *parent = NULL);
+};

@@ -3,11 +3,11 @@
 ///Number of properties associated with each shopping list item (price, name, amount)
 const int NUM_SHOPPINGLIST_PROPERTIES = 3;
 ///Column index for name in shopping list model
-#define ITEM_NAME_COL 0
+#define ITEM_NAME_COL 1
 ///Column index for price in shopping list model
-#define ITEM_PRICE_COL 1
+#define ITEM_PRICE_COL 2
 ///Column index for amount in shopping list model
-#define ITEM_AMOUNT_COL 2
+#define ITEM_AMOUNT_COL 0
 
 ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 {
@@ -170,4 +170,43 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 	}
 
 	return false;
+}
+
+#include <QGridLayout>
+#include <QTableView>
+#include <QLabel>
+#include <QHeaderView>
+#include <QPainter>
+
+ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
+{
+}
+
+void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
+{
+	if (index.column() == ITEM_AMOUNT_COL) {
+		painter->drawText(option.rect, option.displayAlignment, index.data().toString());
+	} else {
+		QStyledItemDelegate::paint(painter, option, index);
+	}
+}
+
+ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent)
+{
+	//view for displaying shopping list
+	QTableView *listView = new QTableView;
+	listView->horizontalHeader()->hide();
+	listView->verticalHeader()->hide();
+	listView->setGridStyle(Qt::NoPen);
+	listView->setModel(list);
+
+	//use custom delegate for displaying each item
+	listView->setItemDelegate(new ShoppingListItemDelegate);
+
+	//layout
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Sum: ")), 0, 0);
+	QLabel *currSum = new QLabel("0");
+	layout->addWidget(currSum, 0, 1);
+	layout->addWidget(listView);
 }
