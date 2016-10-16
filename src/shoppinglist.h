@@ -97,12 +97,6 @@ class ShoppingList : public QAbstractTableModel {
 		 * \return Enabled and editable if the index corresponds to an amount for a shopping list item, disabled otherwise
 		 **/
 		virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-
-		/**
-		 * \ingroup TableModelFunctions
-		 * Reimplemented from QAbstractItemModel. Returns custom headers for the horizontal orientation.
-		 **/
-		virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	public slots:
 		/**
 		 * Add new item to shopping list. Item names function as unique identifiers:

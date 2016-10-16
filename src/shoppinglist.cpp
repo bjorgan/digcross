@@ -149,23 +149,6 @@ Qt::ItemFlags ShoppingList::flags(const QModelIndex &index) const
 	}
 }
 
-QVariant ShoppingList::headerData(int section, Qt::Orientation orientation, int role) const
-{
-	if ((orientation == Qt::Horizontal) && (role == Qt::DisplayRole)) {
-		switch (section) {
-			case ITEM_NAME_COL:
-				return QVariant(tr("Name"));
-			case ITEM_PRICE_COL:
-				return QVariant(tr("Price"));
-			case ITEM_AMOUNT_COL:
-				return QVariant(tr("Amount"));
-		}
-		return QVariant("");
-	}
-
-	return QAbstractTableModel::headerData(section, orientation, role);
-}
-
 /**
  * QAbstractTableModel edit functions.
  **/
