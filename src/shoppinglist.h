@@ -73,7 +73,7 @@ class ShoppingList : public QAbstractTableModel {
 		 * \ingroup TableModelFunctions
 		 * Data access function. Necessary for QAbstractTableModel subclassing. Implements only Qt::DisplayRole.
 		 *
-		 * \param index Index in table. row is assumed to correspond to position in the shopping list, while columns 0, 1 and 2 correspond to name, price and amount (see also ITEM_NAME_COL etc. defined in shoppinglist.cpp)
+		 * \param index Index in table. row is assumed to correspond to position in the shopping list. Which item property (name, price, amount) will appear in which column is defined by ITEM_NAME_COL, ITEM_PRICE_COL and ITEM_AMOUNT_COL constants
 		 * \param role Role, see Qt docs for QAbstractItemModel
 		 * \return Name, price, amount or QVariant(QVariant::Invalid) depending on column index
 		 **/
