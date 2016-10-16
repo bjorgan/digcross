@@ -251,6 +251,7 @@ void ShoppingListWidget::updateDisplayPrice()
 void ShoppingListWidget::deleteShoppingListRow(const QModelIndex &index)
 {
 	if (index.isValid() && (index.column() == ITEM_DELETEBUTTON_COL)) {
+		//signal came from clicking on the delete button-cell, so can safely delete the row
 		shoppingList->deleteItem(index);
 	}
 }
