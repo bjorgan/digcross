@@ -2,6 +2,17 @@
 #include <QAbstractTableModel>
 #include <QMap>
 
+///Number of properties associated with each shopping list item (price, name, amount)
+const int NUM_SHOPPINGLIST_PROPERTIES = 3;
+///Column index for row delete button
+#define ITEM_DELETEBUTTON_COL 3
+///Column index for name in shopping list model
+#define ITEM_NAME_COL 1
+///Column index for price in shopping list model
+#define ITEM_PRICE_COL 2
+///Column index for amount in shopping list model
+#define ITEM_AMOUNT_COL 0
+
 /**
  * Item in shopping list.
  **/
@@ -31,6 +42,11 @@ class ShoppingList : public QAbstractTableModel {
 		double getTotalPrice();
 
 		/**
+		 * Get number of items in shopping list.
+		 **/
+		int numItems() const;
+
+		/**
 		 * \defgroup TableModelFunctions QAbstractTableModel subclassing
 		 * Functions related to the QAbstractTableModel subclassing.
 		 **/
@@ -57,7 +73,7 @@ class ShoppingList : public QAbstractTableModel {
 		 * \ingroup TableModelFunctions
 		 * Data access function. Necessary for QAbstractTableModel subclassing. Implements only Qt::DisplayRole.
 		 *
-		 * \param index Index in table. row is assumed to correspond to position in the shopping list, while columns 0, 1 and 2 correspond to name, price and amount (see also ITEM_NAME_COL etc. defined in shoppinglist.cpp)
+		 * \param index Index in table. row is assumed to correspond to position in the shopping list. Which item property (name, price, amount) will appear in which column is defined by ITEM_NAME_COL, ITEM_PRICE_COL and ITEM_AMOUNT_COL constants
 		 * \param role Role, see Qt docs for QAbstractItemModel
 		 * \return Name, price, amount or QVariant(QVariant::Invalid) depending on column index
 		 **/
@@ -115,20 +131,6 @@ class ShoppingList : public QAbstractTableModel {
 		void wipeList();
 
 		/**
-		 * Delete last added (new) item.
-		 **/
-		void deleteLastAddedItem();
-
-		/**
-		 * \ingroup TableModelFunctions
-		 * Convenience function for setting item amount from a QAbstractItemView-derived subclass.
-		 *
-		 * \param index Item index, see documentation for data()
-		 * \param amount New amount of item at the specified row-number
-		 **/
-		void setItemAmount(const QModelIndex &index, int amount);
-
-		/**
 		 * \ingroup TableModelFunctions
 		 * Convenience function for deleting an item from a QAbstractItemView-derived subclass.
 		 *
@@ -155,4 +157,68 @@ class ShoppingList : public QAbstractTableModel {
 		 * \param row Row number
 		 **/
 		QString getItemName(int row) const;
+	signals:
+		/**
+		 * Emitted whenever the total price changes. Emitted from newItem() and setData().
+		 **/
+		void totalPriceChanged();
+};
+
+#include <QWidget>
+#include <QStyledItemDelegate>
+
+class QLabel;
+
+/**
+ * Shopping list widget. Uses a QTableView to display the supplied
+ * shopping list data model. Uses ShoppingListItemDelegate to draw
+ * each shopping list item.
+ *
+ * This is the class that is used for /drawing/ the shopping list,
+ * while all shopping list /data handling/ is done in ShoppingList.
+ **/
+class ShoppingListWidget : public QWidget {
+	Q_OBJECT
+	public:
+		/**
+		 * Creates the table for displaying the shopping list.
+		 *
+		 * \param list Shopping list
+		 **/
+		ShoppingListWidget(ShoppingList *list, QWidget *parent = NULL);
+	private:
+		///Convenience pointer to the canonical shopping list
+		ShoppingList *shoppingList;
+		///Label for displaying the current total price of items in shopping list
+		QLabel *currentTotalPrice;
+	private slots:
+		/**
+		 * Signal that price displayed in currentTotalPrice should be recalculated from shoppingList.
+		 **/
+		void updateDisplayPrice();
+
+		/**
+		 * Delete shopping list item corresponding to the specified index, given that index.column() corresponds to ITEM_DELETEBUTTON_ROW (user clicked on the cell corresponding to the delete button).
+		 *
+		 * \param index Index
+		 **/
+		void deleteShoppingListRow(const QModelIndex &index);
+};
+
+/**
+ * Used for drawing shopping list rows in the shopping list widget.
+ **/
+class ShoppingListItemDelegate : public QStyledItemDelegate {
+	Q_OBJECT
+	public:
+		ShoppingListItemDelegate(QObject *parent = NULL);
+
+		/**
+		 * Reimplemented from QStyledItemDelegate. Special functionality:
+		 * - Draws amount as "NN x"
+		 * - Draws price as "(NN kr)"
+		 * - In ITEM_DELETEBUTTON_COL column, a delete button is _drawn_.
+		 * It is assumed that actual button clicking in the cell is handled elsewhere (i.e. in ShoppingListWidget).
+		 **/
+		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
