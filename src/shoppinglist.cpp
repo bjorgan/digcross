@@ -261,10 +261,18 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	//connections
 	connect(list, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
 	connect(wipeButton, SIGNAL(clicked()), list, SLOT(wipeList()));
+	connect(listView, SIGNAL(clicked(const QModelIndex &)), SLOT(deleteShoppingListRow(const QModelIndex &)));
 }
 
 void ShoppingListWidget::updateDisplayPrice()
 {
 	double currPrice = shoppingList->getTotalPrice();
 	currentTotalPrice->setText("Sum: " + QString::number(currPrice) + " kr");
+}
+
+void ShoppingListWidget::deleteShoppingListRow(const QModelIndex &index)
+{
+	if (index.isValid() && (index.column() == ITEM_DELETEBUTTON_COL)) {
+		shoppingList->deleteItem(index);
+	}
 }

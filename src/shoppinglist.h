@@ -206,4 +206,5 @@ class ShoppingListWidget : public QWidget {
 		QLabel *currentTotalPrice;
 	private slots:
 		void updateDisplayPrice();
+		void deleteShoppingListRow(const QModelIndex &index);
 };
