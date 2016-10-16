@@ -8,7 +8,7 @@ void ShoppingList::newItem(QString itemName, double price, int amount)
 {
 	if (!items.contains(itemName)) { //item is new, will insert new row
 		itemRows.push_back(itemName);
-		int row = rowCount();
+		int row = numItems();
 
 		beginInsertRows(QModelIndex(), row, row);
 		setItemPrice(itemName, price);
@@ -54,7 +54,7 @@ void ShoppingList::deleteItem(QString itemName)
 void ShoppingList::wipeList()
 {
 	if (items.size() > 0) {
-		beginRemoveRows(QModelIndex(), 0, rowCount()-1);
+		beginRemoveRows(QModelIndex(), 0, numItems()-1);
 
 		items.clear();
 		itemRows.clear();
@@ -65,13 +65,13 @@ void ShoppingList::wipeList()
 
 void ShoppingList::deleteLastAddedItem()
 {
-	deleteItem(getItemName(rowCount()-1));
+	deleteItem(getItemName(numItems()-1));
 }
 
 double ShoppingList::getTotalPrice()
 {
 	double totalAmount = 0;
-	for (int i=0; i < rowCount(); i++) {
+	for (int i=0; i < numItems(); i++) {
 		ShoppingListItem item = items[getItemName(i)];
 		totalAmount += item.amount*item.price;
 	}
@@ -80,7 +80,7 @@ double ShoppingList::getTotalPrice()
 
 QString ShoppingList::getItemName(int row) const
 {
-	if ((row >= 0) && (row < rowCount()) && (rowCount() > 0)) {
+	if ((row >= 0) && (row < numItems()) && (numItems() > 0)) {
 		return itemRows[row];
 	} else {
 		return QString();
