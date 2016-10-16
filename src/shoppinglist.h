@@ -189,22 +189,53 @@ class ShoppingList : public QAbstractTableModel {
 
 class QLabel;
 
+/**
+ * Shopping list widget. Uses a QTableView to display the supplied
+ * shopping list data model. Uses ShoppingListItemDelegate to draw
+ * each shopping list item.
+ **/
+class ShoppingListWidget : public QWidget {
+	Q_OBJECT
+	public:
+		/**
+		 * Creates the table for displaying the shopping list.
+		 *
+		 * \param list Shopping list
+		 **/
+		ShoppingListWidget(ShoppingList *list, QWidget *parent = NULL);
+	private:
+		///Convenience pointer to the canonical shopping list
+		ShoppingList *shoppingList;
+		///Label for displaying the current total price of items in shopping list
+		QLabel *currentTotalPrice;
+	private slots:
+		/**
+		 * Signal that price displayed in currentTotalPrice should be recalculated from shoppingList.
+		 **/
+		void updateDisplayPrice();
+
+		/**
+		 * Delete shopping list item corresponding to the specified index, given that index.column() corresponds to ITEM_DELETEBUTTON_ROW (user clicked on the cell corresponding to the delete button).
+		 *
+		 * \param index Index
+		 **/
+		void deleteShoppingListRow(const QModelIndex &index);
+};
+
+/**
+ * Used for drawing shopping list rows in the shopping list widget.
+ **/
 class ShoppingListItemDelegate : public QStyledItemDelegate {
 	Q_OBJECT
 	public:
 		ShoppingListItemDelegate(QObject *parent = NULL);
+
+		/**
+		 * Reimplemented from QStyledItemDelegate. Special functionality:
+		 * - Draws amount as "NN x"
+		 * - Draws price as "(NN kr)"
+		 * - In ITEM_DELETEBUTTON_COL column, a delete button is _drawn_.
+		 * It is assumed that actual button clicking in the cell is handled elsewhere (i.e. in ShoppingListWidget).
+		 **/
 		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-};
-
-
-class ShoppingListWidget : public QWidget {
-	Q_OBJECT
-	public:
-		ShoppingListWidget(ShoppingList *list, QWidget *parent = NULL);
-	private:
-		ShoppingList *shoppingList;
-		QLabel *currentTotalPrice;
-	private slots:
-		void updateDisplayPrice();
-		void deleteShoppingListRow(const QModelIndex &index);
 };
