@@ -11,7 +11,7 @@ public:
 	 * Constructor sets up connection with db and opens it
 	 * @param path - absolute path to db file
 	 */
-	userDatabase(const QString& path);
+	userDatabase(QString path);
 
 	/**
 	 * @brief Destructor
@@ -24,7 +24,7 @@ public:
 	 * @return 0 - SUCCESS - user successfully created
 	 *         1 - USER_EXISTS_ERROR - user already exists
 	 */
-	int createUser(const QString& USER_ID);
+	int createUser(QString username);
 
 	/**
 	 * @brief Delete user
@@ -32,7 +32,7 @@ public:
 	 * @return 0 - SUCCESS - User successfully deleted
 	 *  	   2 - NO_USER_ERROR - user does not exist
 	 */
-	int deleteUser(const QString& USER_ID);
+	int deleteUser(QString username);
 	/**
 	 * @brief Edit card information for user
 	 * @param USER_ID - username to change card info for
@@ -41,7 +41,7 @@ public:
 	 *         2 - NO_USER_ERROR - user does not exist
 	 *         3 - CARD_OWNED_ERROR - card associated with different user
 	 */
-	int editCard(QString USER_ID, QString CARD_ID);
+	int editCard(QString username, QString card_id);
 
 	/**
 	 * @brief Find username associated to card
@@ -50,7 +50,7 @@ public:
 	 * @return 0 - SUCCESS - username associated with card written to result
 	 * 	   4 - NO_USER_ERROR - No users associated with card, result populated with "error"
 	 */
-	int findUser(const QString& CARD_ID, const QString *result);
+	int findUser(const QString& card_id, const QString *result);
 
 private:
 	QSqlDatabase m_db;
@@ -60,12 +60,12 @@ private:
 	 * @param USER_ID - username to check
 	 * @return true - person exists, false - person does not exist
 	 */
-	bool usernameExists(const QString& USER_ID);        
+	bool usernameExists(QString username);        
 
 	/**
 	 * @brief Check if card exists in db
 	 * @param CARD_ID - card to check
 	 * @return true - card exists, false - card does not exist
 	 */
-	bool cardExists(const QString& CARD_ID);		
+	bool cardExists( QString card_id);		
 }
