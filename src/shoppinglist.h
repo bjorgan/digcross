@@ -2,6 +2,15 @@
 #include <QAbstractTableModel>
 #include <QMap>
 
+///Number of properties associated with each shopping list item (price, name, amount)
+const int NUM_SHOPPINGLIST_PROPERTIES = 3;
+///Column index for name in shopping list model
+#define ITEM_NAME_COL 1
+///Column index for price in shopping list model
+#define ITEM_PRICE_COL 2
+///Column index for amount in shopping list model
+#define ITEM_AMOUNT_COL 0
+
 /**
  * Item in shopping list.
  **/
@@ -81,6 +90,12 @@ class ShoppingList : public QAbstractTableModel {
 		 * \return Enabled and editable if the index corresponds to an amount for a shopping list item, disabled otherwise
 		 **/
 		virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+
+		/**
+		 * \ingroup TableModelFunctions
+		 * Reimplemented from QAbstractItemModel. Returns custom headers for the horizontal orientation.
+		 **/
+		virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	public slots:
 		/**
 		 * Add new item to shopping list. Item names function as unique identifiers:

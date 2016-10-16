@@ -1,14 +1,5 @@
 #include "shoppinglist.h"
 
-///Number of properties associated with each shopping list item (price, name, amount)
-const int NUM_SHOPPINGLIST_PROPERTIES = 3;
-///Column index for name in shopping list model
-#define ITEM_NAME_COL 1
-///Column index for price in shopping list model
-#define ITEM_PRICE_COL 2
-///Column index for amount in shopping list model
-#define ITEM_AMOUNT_COL 0
-
 ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 {
 }
@@ -157,6 +148,22 @@ Qt::ItemFlags ShoppingList::flags(const QModelIndex &index) const
 	}
 }
 
+QVariant ShoppingList::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if ((orientation == Qt::Horizontal) && (role == Qt::DisplayRole)) {
+		switch (section) {
+			case ITEM_NAME_COL:
+				return QVariant(tr("Name"));
+			case ITEM_PRICE_COL:
+				return QVariant(tr("Price"));
+			case ITEM_AMOUNT_COL:
+				return QVariant(tr("Amount"));
+		}
+	}
+
+	return QAbstractTableModel::headerData(section, orientation, role);
+}
+
 /**
  * QAbstractTableModel edit functions.
  **/
@@ -185,7 +192,8 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
 {
 	if (index.column() == ITEM_AMOUNT_COL) {
-		painter->drawText(option.rect, option.displayAlignment, index.data().toString());
+		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " x ");
+	} else if (index.column() == ITEM_PRICE_COL) {
 	} else {
 		QStyledItemDelegate::paint(painter, option, index);
 	}
@@ -195,8 +203,8 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 {
 	//view for displaying shopping list
 	QTableView *listView = new QTableView;
-	listView->horizontalHeader()->hide();
 	listView->verticalHeader()->hide();
+	listView->setAlternatingRowColors(true);
 	listView->setGridStyle(Qt::NoPen);
 	listView->setModel(list);
 
@@ -208,5 +216,5 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	layout->addWidget(new QLabel(tr("Sum: ")), 0, 0);
 	QLabel *currSum = new QLabel("0");
 	layout->addWidget(currSum, 0, 1);
-	layout->addWidget(listView);
+	layout->addWidget(listView, 1, 0, 1, 2);
 }
