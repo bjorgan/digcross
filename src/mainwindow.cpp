@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
 	QGridLayout *layout = new QGridLayout(this);
 
 	//install cardReader as an filter which intercepts _all_ keyboard events to the application
-	CardReader *cardReader = new CardReader(this);
-	qApp->installEventFilter(cardReader);
+	cardReader = new CardReader(this);
 	connect(cardReader, SIGNAL(newCardNumber(QString)), SLOT(triggerTransaction(QString)));
+	enableCardReader(true);
 
 	//shoppinglist and associated view
 	shoppingList = new ShoppingList(this);
@@ -42,7 +42,39 @@ void MainWindow::triggerTransaction(QString cardNumber)
 	}
 }
 
+#include <QMessageBox>
+
 void MainWindow::receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status)
 {
-	//this->setEnabled(true);
+	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
+		showMessage(true, "Transaction processed, balance is now " + QString::number(newBalance));
+	} else {
+		showMessage(false, DaemonClient::errorMessage(status));
+	}
+	this->setEnabled(true);
+}
+
+void MainWindow::showMessage(bool success, QString message)
+{
+	enableCardReader(false);
+
+	//FIXME: This should display the result in the MainWindow widget itself
+	//instead of a separate message box.
+	QString title = tr("Transaction status");
+	if (!success) {
+		QMessageBox::critical(this, title, message);
+	} else {
+		QMessageBox::information(this, title, message);
+	}
+
+	enableCardReader(true);
+}
+
+void MainWindow::enableCardReader(bool on)
+{
+	if (on) {
+		qApp->installEventFilter(cardReader);
+	} else {
+		qApp->removeEventFilter(cardReader);
+	}
 }

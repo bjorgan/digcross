@@ -2,6 +2,7 @@
 #include "daemon_client.h"
 
 class ShoppingList;
+class CardReader;
 
 /**
  * Mainwindow container widget opened when starting digcross.
@@ -15,7 +16,10 @@ class MainWindow : public QWidget {
 		ShoppingList *shoppingList;
 		///Client interface against transaction daemon
 		DaemonClient *transactionDaemon;
+		CardReader *cardReader;
 	private slots:
 		void triggerTransaction(QString cardNumber);
 		void receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status);
+		void enableCardReader(bool on);
+		void showMessage(bool success, QString message);
 };
