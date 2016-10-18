@@ -26,6 +26,8 @@ class DaemonClient : public QObject {
 				       UFS_UNAVAILABLE};
 
 		DaemonClient(QObject *parent = NULL);
+
+		static QString errorMessage(TransactionStatus status);
 	public slots:
 		/**
 		 * Attempt to process transaction for a card number and amount.

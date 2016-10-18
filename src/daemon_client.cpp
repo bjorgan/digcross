@@ -38,3 +38,19 @@ void DaemonClient::transactionFinished(QDBusPendingCallWatcher *call)
 
 	call->deleteLater();
 }
+
+QString DaemonClient::errorMessage(TransactionStatus status)
+{
+	switch (status) {
+		case TRANSACTION_SUCCESSFUL:
+			return QString();
+		case USER_BLACKLISTED:
+			return QString(tr("User is blacklisted."));
+		case USER_NOT_IN_UFS_DATABASE:
+			return QString(tr("User was not found in ufs database."));
+		case USER_NOT_IN_LOCAL_DATABASE:
+			return QString(tr("Card number was not found in local database."));
+		case UFS_UNAVAILABLE:
+			return QString(tr("Could not contact ufs."));
+	}
+}
