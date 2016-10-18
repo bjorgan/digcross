@@ -142,11 +142,11 @@ QVariant ShoppingList::data(const QModelIndex &index, int role) const
 
 Qt::ItemFlags ShoppingList::flags(const QModelIndex &index) const
 {
+	Qt::ItemFlags retFlags = Qt::ItemIsEnabled;
 	if (index.column() == ITEM_AMOUNT_COL) {
-		return Qt::ItemIsEnabled | Qt::ItemIsEditable;
-	} else {
-		return Qt::NoItemFlags;
+		retFlags |= Qt::ItemIsEditable;
 	}
+	return retFlags;
 }
 
 /**
@@ -181,23 +181,22 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const Q_DECL_OVERRIDE
 {
 	QStyleOptionViewItem option = inputOption;
+	option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 	if (index.column() == ITEM_AMOUNT_COL) {
 		//draw amount + "x"
 		option.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, index.data().toString() + " x ");
 	} else if (index.column() == ITEM_PRICE_COL) {
 		//draw price + "kr"
-		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, "(" + index.data().toString() + " kr)");
 	} else if (index.column() == ITEM_NAME_COL) {
-		option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 		painter->drawText(option.rect, option.displayAlignment, index.data().toString());
 	} else if (index.column() == ITEM_DELETEBUTTON_COL) {
 		//draw delete button in its assigned column
 		QStyleOptionButton buttonOptions;
 		buttonOptions.features = QStyleOptionButton::Flat;
 		buttonOptions.rect = inputOption.rect;
-		buttonOptions.state = QStyle::State_Enabled;
+		buttonOptions.state = inputOption.state;
 		buttonOptions.icon = qApp->style()->standardIcon(QStyle::SP_DialogCancelButton);
 		buttonOptions.iconSize = inputOption.rect.size();
 		qApp->style()->drawControl(QStyle::CE_PushButton, &buttonOptions, painter);
@@ -213,7 +212,8 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->verticalHeader()->hide();
 	listView->horizontalHeader()->hide();
 	listView->setAlternatingRowColors(true);
-	listView->setGridStyle(Qt::NoPen);
+	listView->setShowGrid(false);
+	listView->setEditTriggers(QAbstractItemView::DoubleClicked);
 	listView->setModel(list);
 	listView->horizontalHeader()->setSectionResizeMode(ITEM_PRICE_COL, QHeaderView::Stretch);
 	listView->resizeColumnToContents(ITEM_DELETEBUTTON_COL);
