@@ -20,8 +20,9 @@ bool CardReader::eventFilter(QObject *object, QEvent *event)
 	//send signal on enter (RFID card reader ends string input with an enter)
 	if (keyEvent->key() == Qt::Key_Return) {
 		//disallow entries with duration less than a time limit in order to avoid keyboard input and allow only the fast RFID reader
-		if (writeTime.elapsed() < CARDREADER_TIME_LIMIT_MS) {
-			emit newCardNumber(cardNumber.simplified());
+		cardNumber = cardNumber.simplified();
+		if ((writeTime.elapsed() < CARDREADER_TIME_LIMIT_MS) && (!cardNumber.isEmpty())) {
+			emit newCardNumber(cardNumber);
 		}
 
 		cardNumber.clear();
