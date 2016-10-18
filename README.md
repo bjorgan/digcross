@@ -34,4 +34,4 @@ make install
 ```
 
 (Since DBus looks for configuration files in a few (system-wide) paths, the above command
-has to be run with sudo/as root regardless of install prefix.)
+has to be run with root privileges regardless of install prefix.)
