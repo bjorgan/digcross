@@ -2,6 +2,7 @@
 
 #include <QEvent>
 #include <QKeyEvent>
+#include <QApplication>
 
 bool CardReader::eventFilter(QObject *object, QEvent *event)
 {
@@ -29,4 +30,14 @@ bool CardReader::eventFilter(QObject *object, QEvent *event)
 	}
 
 	return true;
+}
+
+void CardReader::enable()
+{
+	qApp->installEventFilter(this);
+}
+
+void CardReader::disable()
+{
+	qApp->removeEventFilter(this);
 }

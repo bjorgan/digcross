@@ -4,7 +4,6 @@
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
 
@@ -19,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
 	//install cardReader as an filter which intercepts _all_ keyboard events to the application
 	cardReader = new CardReader(this);
 	connect(cardReader, SIGNAL(newCardNumber(QString)), SLOT(triggerTransaction(QString)));
-	enableCardReader(true);
 
 	//shoppinglist and associated view
 	shoppingList = new ShoppingList(this);
@@ -62,7 +60,7 @@ void MainWindow::receiveTransactionFeedback(QString cardNumber, float newBalance
 
 void MainWindow::showMessage(bool success, QString message)
 {
-	enableCardReader(false);
+	cardReader->disable();
 
 	//FIXME: This should display the result in the MainWindow widget itself
 	//instead of a separate message box.
@@ -73,14 +71,5 @@ void MainWindow::showMessage(bool success, QString message)
 		QMessageBox::information(this, title, message);
 	}
 
-	enableCardReader(true);
-}
-
-void MainWindow::enableCardReader(bool on)
-{
-	if (on) {
-		qApp->installEventFilter(cardReader);
-	} else {
-		qApp->removeEventFilter(cardReader);
-	}
+	cardReader->enable();
 }
