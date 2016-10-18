@@ -5,10 +5,16 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QApplication>
+#include <QMessageBox>
+#include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent)
 {
 	QGridLayout *layout = new QGridLayout(this);
+
+	QPushButton *addTestItems = new QPushButton(tr("Add test items"));
+	connect(addTestItems, SIGNAL(clicked()), SLOT(addTestItems()));
+	layout->addWidget(addTestItems);
 
 	//install cardReader as an filter which intercepts _all_ keyboard events to the application
 	cardReader = new CardReader(this);
@@ -21,16 +27,17 @@ MainWindow::MainWindow(QWidget *parent)
 	ShoppingListWidget *shoppingListWidget = new ShoppingListWidget(shoppingList);
 	layout->addWidget(shoppingListWidget);
 
-	//Populate with some example data.
-	//Menu class will have to connect to ShoppingList::newItem().
+	//daemon client
+	transactionDaemon = new DaemonClient(this);
+	connect(transactionDaemon, SIGNAL(transactionFeedback(QString, float, DaemonClient::TransactionStatus)), SLOT(receiveTransactionFeedback(QString, float, DaemonClient::TransactionStatus)));
+}
+
+void MainWindow::addTestItems()
+{
 	shoppingList->newItem("Brus", 15, 2);
 	shoppingList->newItem("Godterisopp", 2, 35);
 	shoppingList->newItem("Kvikklunsj", 10, 1);
 	shoppingList->newItem("Ragni spesial", 788.5, 3);
-
-	//daemon client
-	transactionDaemon = new DaemonClient(this);
-	connect(transactionDaemon, SIGNAL(transactionFeedback(QString, float, DaemonClient::TransactionStatus)), SLOT(receiveTransactionFeedback(QString, float, DaemonClient::TransactionStatus)));
 }
 
 void MainWindow::triggerTransaction(QString cardNumber)
@@ -42,12 +49,11 @@ void MainWindow::triggerTransaction(QString cardNumber)
 	}
 }
 
-#include <QMessageBox>
-
 void MainWindow::receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status)
 {
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
-		showMessage(true, "Transaction processed, balance is now " + QString::number(newBalance));
+		showMessage(true, tr("Transaction processed.\nNew balance: ") + QString::number(newBalance));
+		shoppingList->wipeList();
 	} else {
 		showMessage(false, DaemonClient::errorMessage(status));
 	}

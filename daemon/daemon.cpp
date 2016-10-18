@@ -18,7 +18,12 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	QList<QVariant> return_values;
 	return_values << QVariant(card_number);
 	return_values << QVariant(QString::number(-600));
-	return_values << QVariant(2);
+
+	if (card_number == QString("1234")) {
+		return_values << QVariant(0);
+	} else {
+		return_values << QVariant(2);
+	}
 	QDBusMessage reply = msg.createReply(return_values);
 	QDBusConnection::systemBus().send(reply);
 }

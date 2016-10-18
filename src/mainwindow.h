@@ -22,4 +22,5 @@ class MainWindow : public QWidget {
 		void receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status);
 		void enableCardReader(bool on);
 		void showMessage(bool success, QString message);
+		void addTestItems();
 };
