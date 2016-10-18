@@ -44,7 +44,7 @@ class DaemonClient : public QObject {
 		 * \param newBalance New balance for user after transaction
 		 * \param status Status of transaction
 		 **/
-		void transactionFeedback(QString card_number, float newBalance, TransactionStatus status);
+		void transactionFeedback(QString card_number, float newBalance, DaemonClient::TransactionStatus status);
 
 		/**
 		 * Signalled on DBus errors.
