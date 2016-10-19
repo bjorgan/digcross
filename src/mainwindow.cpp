@@ -57,7 +57,7 @@ void MainWindow::triggerTransaction(QString cardNumber)
 void MainWindow::receiveTransactionFeedback(QString username, float newBalance, DaemonClient::TransactionStatus status)
 {
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
-		statusBar->showMessage(tr("Transaction processed. New balance: kr ") + QString::number(newBalance), StatusBar::SUCCESS_ICON);
+		statusBar->showMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 		shoppingList->wipeList();
 	} else {
 		statusBar->showMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
