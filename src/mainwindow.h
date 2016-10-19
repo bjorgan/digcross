@@ -3,6 +3,51 @@
 
 class ShoppingList;
 class CardReader;
+class QStatusBar;
+class QLabel;
+
+///Default timeout of status bar messages
+const int STATUSBAR_TIMEOUT_MS = 5000;
+
+/**
+ * Status bar. More or less like QStatusBar, but with an icon on the right side.
+ **/
+class StatusBar : public QWidget {
+	Q_OBJECT
+	public:
+		StatusBar(QObject *parent = NULL);
+
+		/**
+		 * Icon to display in status bar.
+		 **/
+		enum StatusIcon {
+			NO_ICON, //no icon
+			ERROR_ICON, //display an error icon
+			SUCCESS_ICON //display a green checkmark
+		};
+	public slots:
+		/**
+		 * Display message on statusbar together with an optional icon.
+		 *
+		 * \param message Message to display
+		 * \param icon Icon to display
+		 * \param timeout Timeout value of message
+		 **/
+		void showMessage(QString message, StatusIcon icon = NO_ICON, int timeout = STATUSBAR_TIMEOUT_MS);
+
+		/**
+		 * Clear message from status bar.
+		 **/
+		void clearMessage();
+	private:
+		///Status text
+		QLabel *text;
+		///Status icon
+		QLabel *icon;
+		///Timer for clearing the status bar
+		QTimer *timer;
+
+};
 
 /**
  * Mainwindow container widget opened when starting digcross.
@@ -18,6 +63,7 @@ class MainWindow : public QWidget {
 		DaemonClient *transactionDaemon;
 		///Card reader
 		CardReader *cardReader;
+		StatusBar *statusBar;
 	private slots:
 		/**
 		 * Start a transaction. Calculates amount to transact from shoppingList.
@@ -34,14 +80,6 @@ class MainWindow : public QWidget {
 		 * \param status Transaction status
 		 **/
 		void receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status);
-
-		/**
-		 * Show message in MainWindow. Displays appropriate icons based on the success variable.
-		 *
-		 * \param success Whether action calling this function was a success or not
-		 * \param message Message to display
-		 **/
-		void showMessage(bool success, QString message);
 
 		/**
 		 * Add a couple of test items to the shopping list.

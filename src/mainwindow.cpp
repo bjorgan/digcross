@@ -6,14 +6,21 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QStatusBar>
+#include <QTimer>
+#include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent)
 {
-	QGridLayout *layout = new QGridLayout(this);
+	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	QPushButton *addTestItems = new QPushButton(tr("Add test items"));
 	connect(addTestItems, SIGNAL(clicked()), SLOT(addTestItems()));
 	layout->addWidget(addTestItems);
+
+	//status message widget
+	statusBar = new StatusBar;
+	layout->addWidget(statusBar);
 
 	//install cardReader as an filter which intercepts _all_ keyboard events to the application
 	cardReader = new CardReader(this);
@@ -50,26 +57,51 @@ void MainWindow::triggerTransaction(QString cardNumber)
 void MainWindow::receiveTransactionFeedback(QString cardNumber, float newBalance, DaemonClient::TransactionStatus status)
 {
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
-		showMessage(true, tr("Transaction processed.\nNew balance: ") + QString::number(newBalance));
+		statusBar->showMessage(tr("Transaction processed. New balance: kr ") + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 		shoppingList->wipeList();
 	} else {
-		showMessage(false, DaemonClient::errorMessage(status));
+		statusBar->showMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
 	}
 	this->setEnabled(true);
 }
 
-void MainWindow::showMessage(bool success, QString message)
+StatusBar::StatusBar(QObject *parent)
 {
-	cardReader->disable();
+	QHBoxLayout *layout = new QHBoxLayout(this);
+	text = new QLabel;
+	icon = new QLabel;
+	timer = new QTimer(this);
 
-	//FIXME: This should display the result in the MainWindow widget itself
-	//instead of a separate message box.
-	QString title = tr("Transaction status");
-	if (!success) {
-		QMessageBox::critical(this, title, message);
-	} else {
-		QMessageBox::information(this, title, message);
+	layout->addWidget(icon);
+	layout->addWidget(text, Qt::AlignLeft);
+
+	connect(timer, SIGNAL(timeout()), SLOT(clearMessage()));
+}
+
+void StatusBar::showMessage(QString message, StatusIcon icon, int timeout)
+{
+	timer->stop();
+
+	//status text
+	text->setText(message.simplified());
+
+	//status icon
+	QSize iconSize = text->size();
+	switch (icon) {
+		case ERROR_ICON:
+			this->icon->setPixmap(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(iconSize));
+			break;
+		case SUCCESS_ICON:
+			this->icon->setPixmap(qApp->style()->standardIcon(QStyle::SP_DialogApplyButton).pixmap(iconSize));
+			break;
 	}
 
-	cardReader->enable();
+	timer->start(timeout);
+}
+
+void StatusBar::clearMessage()
+{
+	text->clear();
+	icon->clear();
+	timer->stop();
 }
