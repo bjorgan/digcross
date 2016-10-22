@@ -3,7 +3,10 @@
 #include <QtDBus/QtDBus>
 #include <iostream>
 #include "daemon_common.h"
+#include "daemon_client.h"
 #include <unistd.h>
+
+static double currentBalance = 400; //FIXME: Remove when real backend is implemented. Used for simulating a user account.
 
 void Daemon::processTransaction(QString card_number, QString amount, const QDBusMessage &msg)
 {
@@ -16,16 +19,26 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	//TODO: Get result from transaction. Build feedback reply.
 	sleep(1); //FIXME: Remove when real backend calls are implemented. This is for simulating a delay in the daemon.
 
-	//prepare dummy reply: nickname, balance, transaction status
-	QList<QVariant> return_values;
-	return_values << QVariant("tjafsus");
-	return_values << QVariant(QString::number(-600));
+	//prepare dummy reply
+	QString username = "Ragno";
+	double newBalance = std::nan("");
+	int transactionStatus = (int)DaemonClient::TRANSACTION_SUCCESSFUL;
 
-	if (card_number == QString("1234")) {
-		return_values << QVariant(0);
+	if (card_number == QString("1234")) { //"accept" transactions when card number is 1234
+		if (currentBalance < 0) { //simulate that ufs has blacklisted the user
+			newBalance = currentBalance;
+			transactionStatus = (int)DaemonClient::USER_BLACKLISTED;
+		} else {
+			currentBalance -= amount.toDouble();
+			newBalance = currentBalance;
+		}
 	} else {
-		return_values << QVariant(2);
+		transactionStatus = (int)DaemonClient::USER_NOT_IN_LOCAL_DATABASE;
 	}
+
+	//construct reply: nickname, balance, transaction status
+	QList<QVariant> return_values;
+	return_values << QVariant(username) << QVariant(QString::number(newBalance)) << QVariant(transactionStatus);
 	QDBusMessage reply = msg.createReply(return_values);
 	QDBusConnection::systemBus().send(reply);
 }
