@@ -22,19 +22,24 @@ void DaemonClient::processTransaction(QString card_number, float amount)
 
 void DaemonClient::transactionFinished(QDBusPendingCallWatcher *call)
 {
+	TransactionStatus status;
+	QString username;
+	double balance;
+
 	QDBusPendingReply<QString, QString, int> reply = call->reply();
 
 	if (!reply.isValid()) {
-		emit dbusError(reply.error().message());
-		return;
+		username = UNKNOWN_USER;
+		balance = UNKNOWN_BALANCE;
+		status = DBUS_ERROR;
+	} else {
+		//parse returned values and emit result
+		username = reply.argumentAt(0).toString();
+		balance = reply.argumentAt(1).toString().toFloat();
+		status = (TransactionStatus)reply.argumentAt(2).toInt();
 	}
 
-	//parse returned values and emit result
-	QString username = reply.argumentAt(0).toString();
-	QString balance = reply.argumentAt(1).toString();
-	TransactionStatus status = (TransactionStatus)reply.argumentAt(2).toInt();
-
-	emit transactionFeedback(username, balance.toFloat(), status);
+	emit transactionFeedback(username, balance, status);
 
 	call->deleteLater();
 }
@@ -52,5 +57,7 @@ QString DaemonClient::errorMessage(TransactionStatus status)
 			return QString(tr("Card was not found in local database."));
 		case UFS_UNAVAILABLE:
 			return QString(tr("Could not contact ufs."));
+		case DBUS_ERROR:
+			return QString(tr("Could not contact transaction daemon."));
 	}
 }

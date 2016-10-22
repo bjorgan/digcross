@@ -20,11 +20,12 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	sleep(1); //FIXME: Remove when real backend calls are implemented. This is for simulating a delay in the daemon.
 
 	//prepare dummy reply
-	QString username = "Ragno";
-	double newBalance = std::nan("");
+	QString username = UNKNOWN_USER;
+	double newBalance = UNKNOWN_BALANCE;
 	int transactionStatus = (int)DaemonClient::TRANSACTION_SUCCESSFUL;
 
 	if (card_number == QString("1234")) { //"accept" transactions when card number is 1234
+		username = "Ragno";
 		if (currentBalance < 0) { //simulate that ufs has blacklisted the user
 			newBalance = currentBalance;
 			transactionStatus = (int)DaemonClient::USER_BLACKLISTED;
