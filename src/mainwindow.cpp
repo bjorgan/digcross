@@ -51,6 +51,8 @@ void MainWindow::triggerTransaction(QString cardNumber)
 	if (shoppingList->numItems() > 0) {
 		this->setEnabled(false);
 		double totalPrice = shoppingList->getTotalPrice();
+		cardReader->disable();
+		statusBar->setPermanentMessage(tr("Waiting for transaction..."));
 		transactionDaemon->processTransaction(cardNumber, totalPrice);
 	}
 }
@@ -61,9 +63,11 @@ void MainWindow::receiveTransactionFeedback(QString username, float newBalance, 
 		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 		shoppingList->wipeList();
 	} else {
+		updateDisplayPrice();
 		statusBar->setTemporaryMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
 	}
 	this->setEnabled(true);
+	cardReader->enable();
 }
 
 void MainWindow::updateDisplayPrice()
