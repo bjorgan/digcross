@@ -3,6 +3,7 @@
 #include <QtDBus/QtDBus>
 #include <iostream>
 #include "daemon_common.h"
+#include <unistd.h>
 
 void Daemon::processTransaction(QString card_number, QString amount, const QDBusMessage &msg)
 {
@@ -13,6 +14,7 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	//TODO: Do real calls against backend API.
 
 	//TODO: Get result from transaction. Build feedback reply.
+	sleep(1); //FIXME: Remove when real backend calls are implemented. This is for simulating a delay in the daemon.
 
 	//prepare dummy reply: nickname, balance, transaction status
 	QList<QVariant> return_values;
