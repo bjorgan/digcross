@@ -7,7 +7,7 @@
 class QEvent;
 
 ///Allowed time for card reader to read input characters, in order to avoid normal keyboard input and only allow a fast RFID reader
-const int CARDREADER_TIME_LIMIT_MS = 100000;
+const int CARDREADER_TIME_LIMIT_MS = 100;
 
 /**
  * Receives input from RFID card reader. Accumulates characters in a buffer and
