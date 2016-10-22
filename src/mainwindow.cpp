@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	ShoppingListWidget *shoppingListWidget = new ShoppingListWidget(shoppingList);
 	layout->addWidget(shoppingListWidget);
+	connect(shoppingList, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
 
 	//daemon client
 	transactionDaemon = new DaemonClient(this);
@@ -57,12 +58,23 @@ void MainWindow::triggerTransaction(QString cardNumber)
 void MainWindow::receiveTransactionFeedback(QString username, float newBalance, DaemonClient::TransactionStatus status)
 {
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
-		statusBar->showMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
+		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 		shoppingList->wipeList();
 	} else {
-		statusBar->showMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
+		statusBar->setTemporaryMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
 	}
 	this->setEnabled(true);
+}
+
+void MainWindow::updateDisplayPrice()
+{
+	double currPrice = shoppingList->getTotalPrice();
+
+	if (currPrice > 0) {
+		statusBar->setPermanentMessage("The sum " + QString::number(currPrice) + " kr will be transacted when bla bla");
+	} else {
+		statusBar->clearPermanentMessage();
+	}
 }
 
 StatusBar::StatusBar(QObject *parent)
@@ -75,12 +87,13 @@ StatusBar::StatusBar(QObject *parent)
 	layout->addWidget(icon);
 	layout->addWidget(text, Qt::AlignLeft);
 
-	connect(timer, SIGNAL(timeout()), SLOT(clearMessage()));
+	connect(timer, SIGNAL(timeout()), SLOT(clearTemporaryMessage()));
 }
 
-void StatusBar::showMessage(QString message, StatusIcon icon, int timeout)
+void StatusBar::setTemporaryMessage(QString message, StatusIcon icon, int timeout)
 {
 	timer->stop();
+	clearTemporaryMessage();
 
 	//status text
 	text->setText(message.simplified());
@@ -94,14 +107,35 @@ void StatusBar::showMessage(QString message, StatusIcon icon, int timeout)
 		case SUCCESS_ICON:
 			this->icon->setPixmap(qApp->style()->standardIcon(QStyle::SP_DialogApplyButton).pixmap(iconSize));
 			break;
+		default:
+			break;
 	}
 
 	timer->start(timeout);
 }
 
-void StatusBar::clearMessage()
+void StatusBar::clearTemporaryMessage()
 {
 	text->clear();
 	icon->clear();
 	timer->stop();
+
+	if (permanentMessage.size() > 0) {
+		text->setText(permanentMessage);
+	}
+}
+
+void StatusBar::setPermanentMessage(QString message)
+{
+	permanentMessage = message;
+
+	clearTemporaryMessage();
+}
+
+void StatusBar::clearPermanentMessage()
+{
+	permanentMessage = QString();
+	if (!timer->isActive()) {
+		clearTemporaryMessage();
+	}
 }

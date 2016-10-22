@@ -21,6 +21,7 @@ class MainWindow : public QWidget {
 		DaemonClient *transactionDaemon;
 		///Card reader
 		CardReader *cardReader;
+		///Status bar for displaying messages to user
 		StatusBar *statusBar;
 	private slots:
 		/**
@@ -43,13 +44,21 @@ class MainWindow : public QWidget {
 		 * Add a couple of test items to the shopping list.
 		 **/
 		void addTestItems();
+
+		/**
+		 * For receiving signal from shoppingList that the total price has changed. Informs the user through the status bar.
+		 **/
+		void updateDisplayPrice();
 };
 
 ///Default timeout of status bar messages
 const int STATUSBAR_TIMEOUT_MS = 5000;
 
 /**
- * Status bar. More or less like QStatusBar, but with an icon on the right side.
+ * Status bar, displays messages to the user with an optional icon on the left side.
+ * Can display temporary messages which revert to a permanent message after a given time.
+ *
+ * (Similar to QStatusBar, but with customized features.)
  **/
 class StatusBar : public QWidget {
 	Q_OBJECT
@@ -66,24 +75,40 @@ class StatusBar : public QWidget {
 		};
 	public slots:
 		/**
-		 * Display message on statusbar together with an optional icon.
+		 * Display temporary message on statusbar together with an optional icon.
+		 * If a permanent message has been set, the status bar will revert to
+		 * the permanent message after the timeout (otherwise set the status bar empty).
 		 *
 		 * \param message Message to display
 		 * \param icon Icon to display
 		 * \param timeout Timeout value of message
 		 **/
-		void showMessage(QString message, StatusIcon icon = NO_ICON, int timeout = STATUSBAR_TIMEOUT_MS);
+		void setTemporaryMessage(QString message, StatusIcon icon = NO_ICON, int timeout = STATUSBAR_TIMEOUT_MS);
 
 		/**
-		 * Clear message from status bar.
+		 * Set a permanent message on the status bar. Any temporary messages will immediately
+		 * be cleared. Temporary messages will overwrite the permanent message, but the status bar
+		 * reverts to the permanent message after the timeout.
 		 **/
-		void clearMessage();
+		void setPermanentMessage(QString message);
+
+		/**
+		 * Clear temporary message from status bar, revert to permanent message (or empty status bar).
+		 **/
+		void clearTemporaryMessage();
+
+		/**
+		 * Clear permanent message from status bar, but not temporary messages that are still being displayed.
+		 **/
+		void clearPermanentMessage();
 	private:
+		///Message the status bar will revert to when the temporary message is cleared
+		QString permanentMessage;
 		///Status text
 		QLabel *text;
 		///Status icon
 		QLabel *icon;
-		///Timer for clearing the status bar
+		///Timer for clearing temporary messages from the status bar
 		QTimer *timer;
 
 };

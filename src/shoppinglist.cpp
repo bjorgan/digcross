@@ -221,9 +221,7 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	//use custom delegate for displaying each item
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
-	//buttons and labellzzz
 	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
-	currentTotalPrice = new QLabel;
 
 	//layout
 	QGridLayout *layout = new QGridLayout(this);
@@ -231,21 +229,11 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	int col = 0;
 
 	layout->addWidget(listView, row, col, 1, 2);
-	layout->addWidget(currentTotalPrice, ++row, col, Qt::AlignLeft);
-	layout->addWidget(wipeButton, row, ++col, Qt::AlignRight);
-
-	updateDisplayPrice();
+	layout->addWidget(wipeButton, ++row, ++col, Qt::AlignRight);
 
 	//connections
-	connect(list, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
 	connect(wipeButton, SIGNAL(clicked()), list, SLOT(wipeList()));
 	connect(listView, SIGNAL(clicked(const QModelIndex &)), SLOT(deleteShoppingListRow(const QModelIndex &)));
-}
-
-void ShoppingListWidget::updateDisplayPrice()
-{
-	double currPrice = shoppingList->getTotalPrice();
-	currentTotalPrice->setText("Sum: " + QString::number(currPrice) + " kr");
 }
 
 void ShoppingListWidget::deleteShoppingListRow(const QModelIndex &index)

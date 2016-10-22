@@ -189,14 +189,7 @@ class ShoppingListWidget : public QWidget {
 	private:
 		///Convenience pointer to the canonical shopping list
 		ShoppingList *shoppingList;
-		///Label for displaying the current total price of items in shopping list
-		QLabel *currentTotalPrice;
 	private slots:
-		/**
-		 * Signal that price displayed in currentTotalPrice should be recalculated from shoppingList.
-		 **/
-		void updateDisplayPrice();
-
 		/**
 		 * Delete shopping list item corresponding to the specified index, given that index.column() corresponds to ITEM_DELETEBUTTON_ROW (user clicked on the cell corresponding to the delete button).
 		 *
