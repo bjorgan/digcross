@@ -12,15 +12,15 @@
 
 MainWindow::MainWindow(QWidget *parent)
 {
-	QVBoxLayout *layout = new QVBoxLayout(this);
+	QGridLayout *layout = new QGridLayout(this);
+	int col = 0;
+	int row = 0;
+	int num_cols = 2;
 
+	//temporary test main menu. FIXME: Remove when main menu is implemented.
 	QPushButton *addTestItems = new QPushButton(tr("Add test items"));
 	connect(addTestItems, SIGNAL(clicked()), SLOT(addTestItems()));
-	layout->addWidget(addTestItems);
-
-	//status message widget
-	statusBar = new StatusBar;
-	layout->addWidget(statusBar);
+	layout->addWidget(addTestItems, row, col, 1, num_cols);
 
 	//install cardReader as an filter which intercepts _all_ keyboard events to the application
 	cardReader = new CardReader(this);
@@ -30,12 +30,21 @@ MainWindow::MainWindow(QWidget *parent)
 	shoppingList = new ShoppingList(this);
 
 	ShoppingListWidget *shoppingListWidget = new ShoppingListWidget(shoppingList);
-	layout->addWidget(shoppingListWidget);
+	layout->addWidget(shoppingListWidget, ++row, col, 1, num_cols);
 	connect(shoppingList, SIGNAL(totalPriceChanged()), SLOT(updateDisplayPrice()));
 
 	//daemon client
 	transactionDaemon = new DaemonClient(this);
-	connect(transactionDaemon, SIGNAL(transactionFeedback(QString, float, DaemonClient::TransactionStatus)), SLOT(receiveTransactionFeedback(QString, float, DaemonClient::TransactionStatus)));
+	connect(transactionDaemon, SIGNAL(transactionFeedback(QString, float, DaemonClient::TransactionStatus)), SLOT(transactionFinished(QString, float, DaemonClient::TransactionStatus)));
+
+	//status message widget
+	statusBar = new StatusBar;
+	layout->addWidget(statusBar, ++row, col, 1, num_cols);
+
+	//wipe button for shopping list
+	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
+	layout->addWidget(wipeButton, row, ++col, Qt::AlignRight);
+	connect(wipeButton, SIGNAL(clicked()), shoppingList, SLOT(wipeList()));
 }
 
 void MainWindow::addTestItems()
@@ -57,11 +66,13 @@ void MainWindow::triggerTransaction(QString cardNumber)
 	}
 }
 
-void MainWindow::receiveTransactionFeedback(QString username, float newBalance, DaemonClient::TransactionStatus status)
+void MainWindow::transactionFinished(QString username, float newBalance, DaemonClient::TransactionStatus status)
 {
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
-		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
+		double price = shoppingList->getTotalPrice();
 		shoppingList->wipeList();
+		statusBar->setPermanentMessage(tr("Last transaction: ") + QString::number(price) + " kr for " + username);
+		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 	} else {
 		updateDisplayPrice();
 		statusBar->setTemporaryMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
@@ -75,7 +86,7 @@ void MainWindow::updateDisplayPrice()
 	double currPrice = shoppingList->getTotalPrice();
 
 	if (currPrice > 0) {
-		statusBar->setPermanentMessage("The sum " + QString::number(currPrice) + " kr will be transacted when bla bla");
+		statusBar->setPermanentMessage(tr("Swipe a card to process the following sum: ") + QString::number(currPrice) + " kr");
 	} else {
 		statusBar->clearPermanentMessage();
 	}

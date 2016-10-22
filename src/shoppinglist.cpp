@@ -178,7 +178,7 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 {
 }
 
-void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const Q_DECL_OVERRIDE
+void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const
 {
 	QStyleOptionViewItem option = inputOption;
 	option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
@@ -221,18 +221,14 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	//use custom delegate for displaying each item
 	listView->setItemDelegate(new ShoppingListItemDelegate);
 
-	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
-
 	//layout
 	QGridLayout *layout = new QGridLayout(this);
 	int row = 0;
 	int col = 0;
 
 	layout->addWidget(listView, row, col, 1, 2);
-	layout->addWidget(wipeButton, ++row, ++col, Qt::AlignRight);
 
 	//connections
-	connect(wipeButton, SIGNAL(clicked()), list, SLOT(wipeList()));
 	connect(listView, SIGNAL(clicked(const QModelIndex &)), SLOT(deleteShoppingListRow(const QModelIndex &)));
 }
 

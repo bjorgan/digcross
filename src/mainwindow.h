@@ -25,23 +25,26 @@ class MainWindow : public QWidget {
 		StatusBar *statusBar;
 	private slots:
 		/**
-		 * Start a transaction. Calculates amount to transact from shoppingList.
+		 * Start a transaction. Calculates amount to transact from shoppingList, sends to daemon client. Locks the GUI and the
+		 * card reader.
 		 *
 		 * \param cardNumber Card number
 		 **/
 		void triggerTransaction(QString cardNumber);
 
 		/**
-		 * Receive transaction feedback signal from DaemonClient.
+		 * Receive transaction feedback signal from DaemonClient. Unlocks GUI and the card reader.
 		 *
 		 * \param username Username for which transaction was attempted processed
 		 * \param newBalance New balance of user
 		 * \param status Transaction status
 		 **/
-		void receiveTransactionFeedback(QString username, float newBalance, DaemonClient::TransactionStatus status);
+		void transactionFinished(QString username, float newBalance, DaemonClient::TransactionStatus status);
 
 		/**
 		 * Add a couple of test items to the shopping list.
+		 *
+		 * FIXME: Remove when main menu has been implemented.
 		 **/
 		void addTestItems();
 
