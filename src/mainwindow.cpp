@@ -58,9 +58,12 @@ void MainWindow::addTestItems()
 void MainWindow::triggerTransaction(QString cardNumber)
 {
 	if (shoppingList->numItems() > 0) {
+		//disable input
 		this->setEnabled(false);
-		double totalPrice = shoppingList->getTotalPrice();
 		cardReader->disable();
+
+		//send transaction
+		double totalPrice = shoppingList->getTotalPrice();
 		statusBar->setPermanentMessage(tr("Waiting for transaction..."));
 		transactionDaemon->processTransaction(cardNumber, totalPrice);
 	}
@@ -68,6 +71,7 @@ void MainWindow::triggerTransaction(QString cardNumber)
 
 void MainWindow::transactionFinished(QString username, float newBalance, DaemonClient::TransactionStatus status)
 {
+	//display appropriate status messages for result of transaction
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
 		double price = shoppingList->getTotalPrice();
 		shoppingList->wipeList();
@@ -77,6 +81,8 @@ void MainWindow::transactionFinished(QString username, float newBalance, DaemonC
 		updateDisplayPrice();
 		statusBar->setTemporaryMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
 	}
+
+	//re-enable input
 	this->setEnabled(true);
 	cardReader->enable();
 }
@@ -135,6 +141,7 @@ void StatusBar::clearTemporaryMessage()
 	icon->clear();
 	timer->stop();
 
+	//revert to permanent message
 	if (permanentMessage.size() > 0) {
 		text->setText(permanentMessage);
 	}
@@ -150,6 +157,7 @@ void StatusBar::setPermanentMessage(QString message)
 void StatusBar::clearPermanentMessage()
 {
 	permanentMessage = QString();
+
 	if (!timer->isActive()) {
 		clearTemporaryMessage();
 	}
