@@ -79,7 +79,7 @@ void MainWindow::transactionFinished(QString username, float newBalance, DaemonC
 		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 	} else {
 		updateDisplayPrice();
-		statusBar->setTemporaryMessage(DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
+		statusBar->setTemporaryMessage(tr("Transaction denied. ") + DaemonClient::errorMessage(status), StatusBar::ERROR_ICON);
 	}
 
 	//re-enable input

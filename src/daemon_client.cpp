@@ -45,7 +45,7 @@ QString DaemonClient::errorMessage(TransactionStatus status)
 		case TRANSACTION_SUCCESSFUL:
 			return QString();
 		case USER_BLACKLISTED:
-			return QString(tr("User was blacklisted."));
+			return QString(tr("User is blacklisted."));
 		case USER_NOT_IN_UFS_DATABASE:
 			return QString(tr("User was not found in ufs database."));
 		case USER_NOT_IN_LOCAL_DATABASE:
