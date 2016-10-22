@@ -162,8 +162,3 @@ void StatusBar::clearPersistentMessage()
 		clearTemporaryMessage();
 	}
 }
-
-QString StatusBar::currentMessage()
-{
-	return text->text();
-}

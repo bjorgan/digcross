@@ -69,13 +69,6 @@ class StatusBar : public QWidget {
 		StatusBar(QObject *parent = NULL);
 
 		/**
-		 * Get currently displayed status message.
-		 *
-		 * \return Current status message
-		 **/
-		QString currentMessage();
-
-		/**
 		 * Icon to display in status bar.
 		 **/
 		enum StatusIcon {
