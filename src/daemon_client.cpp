@@ -7,7 +7,7 @@
 
 DaemonClient::DaemonClient(QObject *parent) : QObject(parent)
 {
-	qRegisterMetaType<DaemonClient::TransactionStatus>("TransactionStatus");
+	qRegisterMetaType<DaemonClient::TransactionStatus>("DaemonClient::TransactionStatus");
 }
 
 void DaemonClient::processTransaction(QString card_number, float amount)
