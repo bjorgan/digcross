@@ -64,7 +64,7 @@ void MainWindow::triggerTransaction(QString cardNumber)
 
 		//send transaction
 		double totalPrice = shoppingList->getTotalPrice();
-		statusBar->setPermanentMessage(tr("Waiting for transaction..."));
+		statusBar->setPersistentMessage(tr("Waiting for transaction..."));
 		transactionDaemon->processTransaction(cardNumber, totalPrice);
 	}
 }
@@ -75,7 +75,7 @@ void MainWindow::transactionFinished(QString username, float newBalance, DaemonC
 	if (status == DaemonClient::TRANSACTION_SUCCESSFUL) {
 		double price = shoppingList->getTotalPrice();
 		shoppingList->wipeList();
-		statusBar->setPermanentMessage(tr("Last transaction: ") + QString::number(price) + " kr for " + username);
+		statusBar->setPersistentMessage(tr("Last transaction: ") + QString::number(price) + " kr for " + username);
 		statusBar->setTemporaryMessage(tr("Transaction processed. New balance for ") + username + ": kr " + QString::number(newBalance), StatusBar::SUCCESS_ICON);
 	} else {
 		updateDisplayPrice();
@@ -92,9 +92,9 @@ void MainWindow::updateDisplayPrice()
 	double currPrice = shoppingList->getTotalPrice();
 
 	if (currPrice > 0) {
-		statusBar->setPermanentMessage(tr("Swipe a card to process the following sum: ") + QString::number(currPrice) + " kr");
+		statusBar->setPersistentMessage(tr("Swipe a card to process the following sum: ") + QString::number(currPrice) + " kr");
 	} else {
-		statusBar->clearPermanentMessage();
+		statusBar->clearPersistentMessage();
 	}
 }
 
@@ -141,24 +141,29 @@ void StatusBar::clearTemporaryMessage()
 	icon->clear();
 	timer->stop();
 
-	//revert to permanent message
-	if (permanentMessage.size() > 0) {
-		text->setText(permanentMessage);
+	//revert to persistent message
+	if (persistentMessage.size() > 0) {
+		text->setText(persistentMessage);
 	}
 }
 
-void StatusBar::setPermanentMessage(QString message)
+void StatusBar::setPersistentMessage(QString message)
 {
-	permanentMessage = message;
+	persistentMessage = message;
 
 	clearTemporaryMessage();
 }
 
-void StatusBar::clearPermanentMessage()
+void StatusBar::clearPersistentMessage()
 {
-	permanentMessage = QString();
+	persistentMessage = QString();
 
 	if (!timer->isActive()) {
 		clearTemporaryMessage();
 	}
+}
+
+QString StatusBar::currentMessage()
+{
+	return text->text();
 }

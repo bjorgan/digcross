@@ -59,7 +59,7 @@ const int STATUSBAR_TIMEOUT_MS = 5000;
 
 /**
  * Status bar, displays messages to the user with an optional icon on the left side.
- * Can display temporary messages which revert to a permanent message after a given time.
+ * Can display temporary messages which revert to a persistent message after a given time.
  *
  * (Similar to QStatusBar, but with customized features.)
  **/
@@ -67,6 +67,13 @@ class StatusBar : public QWidget {
 	Q_OBJECT
 	public:
 		StatusBar(QObject *parent = NULL);
+
+		/**
+		 * Get currently displayed status message.
+		 *
+		 * \return Current status message
+		 **/
+		QString currentMessage();
 
 		/**
 		 * Icon to display in status bar.
@@ -79,8 +86,8 @@ class StatusBar : public QWidget {
 	public slots:
 		/**
 		 * Display temporary message on statusbar together with an optional icon.
-		 * If a permanent message has been set, the status bar will revert to
-		 * the permanent message after the timeout (otherwise set the status bar empty).
+		 * If a persistent message has been set, the status bar will revert to
+		 * the persistent message after the timeout (otherwise set the status bar empty).
 		 *
 		 * \param message Message to display
 		 * \param icon Icon to display
@@ -89,24 +96,24 @@ class StatusBar : public QWidget {
 		void setTemporaryMessage(QString message, StatusIcon icon = NO_ICON, int timeout = STATUSBAR_TIMEOUT_MS);
 
 		/**
-		 * Set a permanent message on the status bar. Any temporary messages will immediately
-		 * be cleared. Temporary messages will overwrite the permanent message, but the status bar
-		 * reverts to the permanent message after the timeout.
+		 * Set a persistent message on the status bar. Any temporary messages will immediately
+		 * be cleared. Temporary messages will overwrite the persistent message, but the status bar
+		 * reverts to the persistent message after the timeout.
 		 **/
-		void setPermanentMessage(QString message);
+		void setPersistentMessage(QString message);
 
 		/**
-		 * Clear temporary message from status bar, revert to permanent message (or empty status bar).
+		 * Clear temporary message from status bar, revert to persistent message (or empty status bar).
 		 **/
 		void clearTemporaryMessage();
 
 		/**
-		 * Clear permanent message from status bar, but not temporary messages that are still being displayed.
+		 * Clear persistent message from status bar, but not temporary messages that are still being displayed.
 		 **/
-		void clearPermanentMessage();
+		void clearPersistentMessage();
 	private:
 		///Message the status bar will revert to when the temporary message is cleared
-		QString permanentMessage;
+		QString persistentMessage;
 		///Status text
 		QLabel *text;
 		///Status icon
