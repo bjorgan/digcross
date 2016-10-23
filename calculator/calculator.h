@@ -63,14 +63,8 @@ private slots:
     void multiplicativeOperatorClicked();
     void equalClicked();
     void pointClicked();
-    void changeSignClicked();
     void backspaceClicked();
-    void clear();
     void clearAll();
-    void clearMemory();
-    void readMemory();
-    void setMemory();
-    void addToMemory();
 //! [0]
 
 //! [1]
