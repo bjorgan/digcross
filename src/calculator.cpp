@@ -42,7 +42,6 @@
 
 #include <cmath>
 
-#include "button.h"
 #include "calculator.h"
 
 Calculator::Calculator(QRect displayRect, QWidget *parent)
@@ -306,3 +305,21 @@ double Calculator::getDisplayedAmount()
 {
     return display->text().toDouble();
 }
+
+#include <QtWidgets>
+
+Button::Button(const QString &text, QWidget *parent)
+    : QToolButton(parent)
+{
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    setText(text);
+}
+
+QSize Button::sizeHint() const
+{
+    QSize size = QToolButton::sizeHint();
+    size.rheight() += 20;
+    size.rwidth() = qMax(size.width(), size.height());
+    return size;
+}
+
