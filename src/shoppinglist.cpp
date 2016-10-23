@@ -178,7 +178,7 @@ ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledIte
 {
 }
 
-void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const Q_DECL_OVERRIDE
+void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &inputOption, const QModelIndex &index) const
 {
 	QStyleOptionViewItem option = inputOption;
 	if (index.column() == ITEM_AMOUNT_COL) {
