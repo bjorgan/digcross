@@ -45,8 +45,8 @@
 #include "button.h"
 #include "calculator.h"
 
-Calculator::Calculator(QWidget *parent)
-    : QWidget(parent)
+Calculator::Calculator(QRect displayRect, QWidget *parent)
+    : QWidget(parent), displayRect(displayRect)
 {
     sumInMemory = 0.0;
     sumSoFar = 0.0;
@@ -57,10 +57,8 @@ Calculator::Calculator(QWidget *parent)
     display->setReadOnly(true);
     display->setAlignment(Qt::AlignRight);
     display->setMaxLength(15);
-
-    QFont font = display->font();
-    font.setPointSize(font.pointSize() + 8);
-    display->setFont(font);
+    display->setFixedWidth(displayRect.width());
+    display->setFixedHeight(displayRect.height());
 
     for (int i = 0; i < NumDigitButtons; ++i) {
         digitButtons[i] = createButton(QString::number(i), SLOT(digitClicked()));
@@ -92,7 +90,8 @@ Calculator::Calculator(QWidget *parent)
     mainLayout->addWidget(display, 0, 0, 1, 4);
     mainLayout->addWidget(backspaceButton, 1, 0, 1, 2);
     mainLayout->addWidget(clearAllButton, 1, 2, 1, 2);
-
+    mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
 
 
 

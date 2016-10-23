@@ -214,4 +214,6 @@ class ShoppingListItemDelegate : public QStyledItemDelegate {
 		 * It is assumed that actual button clicking in the cell is handled elsewhere (i.e. in ShoppingListWidget).
 		 **/
 		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+		virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };

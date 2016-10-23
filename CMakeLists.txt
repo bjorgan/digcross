@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(digikryss)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/calculator)
 
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 find_package(Qt5DBus)
 
 #main GUI application
-add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp)
+add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp calculator/calculator.cpp calculator/button.cpp)
 target_link_libraries(digcross Qt5::Widgets Qt5::DBus)
 
 #transaction daemon

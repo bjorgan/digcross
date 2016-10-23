@@ -1,4 +1,5 @@
 #include "shoppinglist.h"
+#include "calculator.h"
 
 ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 {
@@ -203,6 +204,11 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 	} else {
 		QStyledItemDelegate::paint(painter, inputOption, index);
 	}
+}
+
+QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	return new Calculator(option.rect, parent);
 }
 
 ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent), shoppingList(list)
