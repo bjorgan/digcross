@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	//status message widget
 	statusBar = new StatusBar;
-	layout->addWidget(statusBar, ++row, col, 1, num_cols);
+	layout->addWidget(statusBar, ++row, col);
 
 	//wipe button for shopping list
 	QPushButton *wipeButton = new QPushButton(qApp->style()->standardIcon(QStyle::SP_DialogResetButton), tr("Wipe list"));
@@ -101,7 +101,11 @@ void MainWindow::updateDisplayPrice()
 StatusBar::StatusBar(QObject *parent)
 {
 	QHBoxLayout *layout = new QHBoxLayout(this);
+	layout->setSizeConstraint(QLayout::SetMinimumSize);
+
 	text = new QLabel;
+	text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+	text->setWordWrap(true);
 	icon = new QLabel;
 	timer = new QTimer(this);
 
