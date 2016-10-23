@@ -45,7 +45,6 @@
 #include "button.h"
 #include "calculator.h"
 
-//! [0]
 Calculator::Calculator(QWidget *parent)
     : QWidget(parent)
 {
@@ -53,11 +52,8 @@ Calculator::Calculator(QWidget *parent)
     sumSoFar = 0.0;
     factorSoFar = 0.0;
     waitingForOperand = true;
-//! [0]
 
-//! [1]
     display = new QLineEdit("0");
-//! [1] //! [2]
     display->setReadOnly(true);
     display->setAlignment(Qt::AlignRight);
     display->setMaxLength(15);
@@ -65,9 +61,7 @@ Calculator::Calculator(QWidget *parent)
     QFont font = display->font();
     font.setPointSize(font.pointSize() + 8);
     display->setFont(font);
-//! [2]
 
-//! [4]
     for (int i = 0; i < NumDigitButtons; ++i) {
         digitButtons[i] = createButton(QString::number(i), SLOT(digitClicked()));
     }
@@ -92,11 +86,8 @@ Calculator::Calculator(QWidget *parent)
 
 
     Button *equalButton = createButton(tr("="), SLOT(equalClicked()));
-//! [4]
 
-//! [5]
     QGridLayout *mainLayout = new QGridLayout;
-//! [5] //! [6]
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
     mainLayout->addWidget(display, 0, 0, 1, 4);
     mainLayout->addWidget(backspaceButton, 1, 0, 1, 2);
@@ -130,9 +121,7 @@ Calculator::Calculator(QWidget *parent)
 
     setWindowTitle(tr("Calculator"));
 }
-//! [6]
 
-//! [7]
 void Calculator::digitClicked()
 {
     Button *clickedButton = qobject_cast<Button *>(sender());
@@ -146,11 +135,8 @@ void Calculator::digitClicked()
     }
     display->setText(display->text() + QString::number(digitValue));
 }
-//! [7]
 
-//! [8]
 void Calculator::unaryOperatorClicked()
-//! [8] //! [9]
 {
     Button *clickedButton = qobject_cast<Button *>(sender());
     QString clickedOperator = clickedButton->text();
@@ -175,19 +161,14 @@ void Calculator::unaryOperatorClicked()
     display->setText(QString::number(result));
     waitingForOperand = true;
 }
-//! [9]
 
-//! [10]
 void Calculator::additiveOperatorClicked()
-//! [10] //! [11]
 {
     Button *clickedButton = qobject_cast<Button *>(sender());
     QString clickedOperator = clickedButton->text();
     double operand = display->text().toDouble();
 
-//! [11] //! [12]
     if (!pendingMultiplicativeOperator.isEmpty()) {
-//! [12] //! [13]
         if (!calculate(operand, pendingMultiplicativeOperator)) {
             abortOperation();
             return;
@@ -198,9 +179,7 @@ void Calculator::additiveOperatorClicked()
         pendingMultiplicativeOperator.clear();
     }
 
-//! [13] //! [14]
     if (!pendingAdditiveOperator.isEmpty()) {
-//! [14] //! [15]
         if (!calculate(operand, pendingAdditiveOperator)) {
             abortOperation();
             return;
@@ -210,14 +189,10 @@ void Calculator::additiveOperatorClicked()
         sumSoFar = operand;
     }
 
-//! [15] //! [16]
     pendingAdditiveOperator = clickedOperator;
-//! [16] //! [17]
     waitingForOperand = true;
 }
-//! [17]
 
-//! [18]
 void Calculator::multiplicativeOperatorClicked()
 {
     Button *clickedButton = qobject_cast<Button *>(sender());
@@ -237,9 +212,7 @@ void Calculator::multiplicativeOperatorClicked()
     pendingMultiplicativeOperator = clickedOperator;
     waitingForOperand = true;
 }
-//! [18]
 
-//! [20]
 void Calculator::equalClicked()
 {
     double operand = display->text().toDouble();
@@ -267,9 +240,7 @@ void Calculator::equalClicked()
     sumSoFar = 0.0;
     waitingForOperand = true;
 }
-//! [20]
 
-//! [22]
 void Calculator::pointClicked()
 {
     if (waitingForOperand)
@@ -278,9 +249,7 @@ void Calculator::pointClicked()
         display->setText(display->text() + tr("."));
     waitingForOperand = false;
 }
-//! [22]
 
-//! [26]
 void Calculator::backspaceClicked()
 {
     if (waitingForOperand)
@@ -294,9 +263,7 @@ void Calculator::backspaceClicked()
     }
     display->setText(text);
 }
-//! [26]
 
-//! [30]
 void Calculator::clearAll()
 {
     sumSoFar = 0.0;
@@ -313,17 +280,13 @@ Button *Calculator::createButton(const QString &text, const char *member)
     connect(button, SIGNAL(clicked()), this, member);
     return button;
 }
-//! [34]
 
-//! [36]
 void Calculator::abortOperation()
 {
     clearAll();
     display->setText(tr("####"));
 }
-//! [36]
 
-//! [38]
 bool Calculator::calculate(double rightOperand, const QString &pendingOperator)
 {
     if (pendingOperator == tr("+")) {
@@ -339,4 +302,4 @@ bool Calculator::calculate(double rightOperand, const QString &pendingOperator)
     }
     return true;
 }
-//! [38]
+
