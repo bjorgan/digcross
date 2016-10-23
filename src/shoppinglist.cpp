@@ -211,6 +211,12 @@ QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOpt
 	return new Calculator(option.rect, parent);
 }
 
+void ShoppingListItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+	Calculator *calculator = qobject_cast<Calculator*>(editor);
+	model->setData(index, QVariant(calculator->getDisplayedAmount()));
+}
+
 ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent), shoppingList(list)
 {
 	//view for displaying shopping list

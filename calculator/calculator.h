@@ -54,6 +54,7 @@ class Calculator : public QWidget
 
 public:
     Calculator(QRect displayRect, QWidget *parent = 0);
+    double getDisplayedAmount();
 
 private slots:
     void digitClicked();

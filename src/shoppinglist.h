@@ -216,4 +216,6 @@ class ShoppingListItemDelegate : public QStyledItemDelegate {
 		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 		virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+		virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 };

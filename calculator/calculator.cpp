@@ -302,3 +302,7 @@ bool Calculator::calculate(double rightOperand, const QString &pendingOperator)
     return true;
 }
 
+double Calculator::getDisplayedAmount()
+{
+    return display->text().toDouble();
+}
