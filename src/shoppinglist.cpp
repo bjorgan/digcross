@@ -208,7 +208,18 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 
 QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	return new Calculator(option.rect, parent);
+	Calculator *calculator = new Calculator(option.rect, parent);
+	calculator->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Popup | Qt::FramelessWindowHint); //make calculator stay on top of everything else
+	return calculator;
+}
+#include <iostream>
+void ShoppingListItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	//move calculator so that it is positioned directly above the amount field
+	QWidget *parent = qobject_cast<QWidget*>(editor->parent());
+	QPoint parentAbsolutePos = parent->mapToGlobal(parent->pos());
+
+	editor->move(parentAbsolutePos.x() + option.rect.x(), parentAbsolutePos.y() + option.rect.y());
 }
 
 void ShoppingListItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
