@@ -176,6 +176,7 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 #include <QStyleOptionButton>
 #include <QPixmap>
 #include <QBitmap>
+#include <QDesktopWidget>
 
 ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
@@ -215,21 +216,34 @@ QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOpt
 	//make calculator stay on top of everything else
 	calculator->setWindowFlags(Qt::Popup);
 
-	//make the calculator background become transparent, somehow
-	calculator->setAutoFillBackground(false);
-	QPixmap pixmap = calculator->grab();
-	calculator->setMask(pixmap.createHeuristicMask());
+	calculator->layout()->activate(); //force layout update
 
 	return calculator;
 }
 
 void ShoppingListItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	//move calculator so that it is positioned directly above the amount field
 	QWidget *parent = qobject_cast<QWidget*>(editor->parent());
 	QPoint parentAbsolutePos = parent->mapToGlobal(parent->pos());
+	Calculator *calculator = qobject_cast<Calculator*>(editor);
 
-	editor->move(parentAbsolutePos.x() + option.rect.x(), parentAbsolutePos.y() + option.rect.y());
+	//flip display field position if the space left on the screen is too small
+	int remainingScreenHeight = QApplication::desktop()->screenGeometry().height() - parentAbsolutePos.y();
+	int calculatorEndPosition = option.rect.y() + calculator->height();
+	if (remainingScreenHeight < calculatorEndPosition) {
+		calculator->setDisplayPos(Calculator::DISPLAY_ON_BOTTOM);
+	} else {
+		calculator->setDisplayPos(Calculator::DISPLAY_ON_TOP);
+	}
+
+	//move calculator so that its display field is positioned directly above the amount field
+	QPoint calculatorDisplayPos = calculator->displayPos();
+	editor->move(parentAbsolutePos.x() + option.rect.x(), parentAbsolutePos.y() + option.rect.y() - calculatorDisplayPos.y());
+
+	//make the calculator background become transparent
+	calculator->setAutoFillBackground(false);
+	QPixmap pixmap = calculator->grab();
+	calculator->setMask(pixmap.createHeuristicMask());
 }
 
 void ShoppingListItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
