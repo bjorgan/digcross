@@ -43,57 +43,45 @@
 
 #include <QWidget>
 
-QT_BEGIN_NAMESPACE
 class QLineEdit;
-QT_END_NAMESPACE
 class Button;
 
-class Calculator : public QWidget
-{
-    Q_OBJECT
-
-public:
-    Calculator(int displayHeight, int displayWidth, QWidget *parent = 0);
-    double getDisplayedAmount();
-
-private slots:
-    void digitClicked();
-    void unaryOperatorClicked();
-    void additiveOperatorClicked();
-    void multiplicativeOperatorClicked();
-    void equalClicked();
-    void pointClicked();
-    void backspaceClicked();
-    void clearAll();
-
-private:
-    Button *createButton(const QString &text, const char *member);
-    void abortOperation();
-    bool calculate(double rightOperand, const QString &pendingOperator);
-
-    double sumInMemory;
-    double sumSoFar;
-    double factorSoFar;
-    QString pendingAdditiveOperator;
-    QString pendingMultiplicativeOperator;
-    bool waitingForOperand;
-
-    QLineEdit *display;
-
-    enum { NumDigitButtons = 10 };
-    Button *digitButtons[NumDigitButtons];
+class Calculator : public QWidget {
+	Q_OBJECT
+	public:
+		Calculator(int displayHeight, int displayWidth, QWidget *parent = 0);
+		double getDisplayedAmount();
+	private slots:
+		void digitClicked();
+		void unaryOperatorClicked();
+		void additiveOperatorClicked();
+		void multiplicativeOperatorClicked();
+		void equalClicked();
+		void pointClicked();
+		void backspaceClicked();
+		void clearAll();
+	private:
+		Button *createButton(const QString &text, const char *member);
+		void abortOperation();
+		bool calculate(double rightOperand, const QString &pendingOperator);
+		double sumInMemory;
+		double sumSoFar;
+		double factorSoFar;
+		QString pendingAdditiveOperator;
+		QString pendingMultiplicativeOperator;
+		bool waitingForOperand;
+		QLineEdit *display;
+		enum { NumDigitButtons = 10 };
+		Button *digitButtons[NumDigitButtons];
 };
 
 #include <QToolButton>
 
-class Button : public QToolButton
-{
-    Q_OBJECT
-
-public:
-    explicit Button(const QString &text, QWidget *parent = 0);
-
-    QSize sizeHint() const Q_DECL_OVERRIDE;
+class Button : public QToolButton {
+	Q_OBJECT
+	public:
+		explicit Button(const QString &text, QWidget *parent = 0);
+		QSize sizeHint() const Q_DECL_OVERRIDE;
 };
 
 #endif
