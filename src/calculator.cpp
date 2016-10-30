@@ -50,6 +50,7 @@ Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : Q
 	factorSoFar = 0.0;
 	waitingForOperand = true;
 
+	//calculator display
 	display = new QLineEdit("0");
 	display->setReadOnly(true);
 	display->setAlignment(Qt::AlignRight);
@@ -57,6 +58,7 @@ Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : Q
 	display->setFixedWidth(displayWidth);
 	display->setFixedHeight(displayHeight);
 
+	//buttons
 	for (int i = 0; i < NumDigitButtons; ++i) {
 		digitButtons[i] = createButton(QString::number(i), SLOT(digitClicked()));
 	}
@@ -73,6 +75,7 @@ Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : Q
 
 	Button *equalButton = createButton(tr("="), SLOT(equalClicked()));
 
+	//layout
 	QGridLayout *mainLayout = new QGridLayout;
 	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
 	mainLayout->addWidget(display, 0, 0, 1, 4);
