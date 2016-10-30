@@ -53,7 +53,7 @@ class Calculator : public QWidget
     Q_OBJECT
 
 public:
-    Calculator(QRect displayRect, QWidget *parent = 0);
+    Calculator(int displayHeight, int displayWidth, QWidget *parent = 0);
     double getDisplayedAmount();
 
 private slots:
@@ -67,8 +67,6 @@ private slots:
     void clearAll();
 
 private:
-    QRect displayRect;
-
     Button *createButton(const QString &text, const char *member);
     void abortOperation();
     bool calculate(double rightOperand, const QString &pendingOperator);

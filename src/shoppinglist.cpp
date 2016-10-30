@@ -174,6 +174,8 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 #include <QPushButton>
 #include <QApplication>
 #include <QStyleOptionButton>
+#include <QPixmap>
+#include <QBitmap>
 
 ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
@@ -208,11 +210,19 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 
 QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	Calculator *calculator = new Calculator(option.rect, parent);
-	calculator->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Popup | Qt::FramelessWindowHint); //make calculator stay on top of everything else
+	Calculator *calculator = new Calculator(option.rect.height(), option.rect.width(), parent);
+
+	//make calculator stay on top of everything else
+	calculator->setWindowFlags(Qt::Popup);
+
+	//make the calculator background become transparent, somehow
+	calculator->setAutoFillBackground(false);
+	QPixmap pixmap = calculator->grab();
+	calculator->setMask(pixmap.createHeuristicMask());
+
 	return calculator;
 }
-#include <iostream>
+
 void ShoppingListItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	//move calculator so that it is positioned directly above the amount field

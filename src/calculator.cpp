@@ -44,8 +44,8 @@
 
 #include "calculator.h"
 
-Calculator::Calculator(QRect displayRect, QWidget *parent)
-    : QWidget(parent), displayRect(displayRect)
+Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent)
+    : QWidget(parent)
 {
     sumInMemory = 0.0;
     sumSoFar = 0.0;
@@ -56,8 +56,8 @@ Calculator::Calculator(QRect displayRect, QWidget *parent)
     display->setReadOnly(true);
     display->setAlignment(Qt::AlignRight);
     display->setMaxLength(15);
-    display->setFixedWidth(displayRect.width());
-    display->setFixedHeight(displayRect.height());
+    display->setFixedWidth(displayWidth);
+    display->setFixedHeight(displayHeight);
 
     for (int i = 0; i < NumDigitButtons; ++i) {
         digitButtons[i] = createButton(QString::number(i), SLOT(digitClicked()));
