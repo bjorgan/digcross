@@ -43,6 +43,9 @@
 
 #include "calculator.h"
 
+///The number of columns the calculator display should span in the layout
+const int DISPLAY_COLSPAN = 4;
+
 Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : QWidget(parent)
 {
 	sumInMemory = 0.0;
@@ -78,7 +81,7 @@ Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : Q
 	//layout
 	QGridLayout *mainLayout = new QGridLayout;
 	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
-	mainLayout->addWidget(display, 0, 0, 1, 4);
+	mainLayout->addWidget(display, 0, 0, 1, DISPLAY_COLSPAN);
 	mainLayout->addWidget(backspaceButton, 1, 0, 1, 2);
 	mainLayout->addWidget(clearAllButton, 1, 2, 1, 2);
 	mainLayout->setSpacing(0);
@@ -100,6 +103,18 @@ Calculator::Calculator(int displayHeight, int displayWidth, QWidget *parent) : Q
 	setLayout(mainLayout);
 
 	setWindowTitle(tr("Calculator"));
+}
+
+void Calculator::setDisplayPos(DisplayPlacement placement)
+{
+	QGridLayout *layout = qobject_cast<QGridLayout*>(this->layout());
+	layout->removeWidget(display);
+	if (placement == DISPLAY_ON_TOP) {
+		layout->addWidget(display, 0, 0, 1, DISPLAY_COLSPAN);
+	} else {
+		layout->addWidget(display, layout->rowCount(), 0, 1, DISPLAY_COLSPAN);
+	}
+	layout->activate();
 }
 
 void Calculator::digitClicked()
@@ -141,6 +156,11 @@ void Calculator::unaryOperatorClicked()
 	}
 	display->setText(QString::number(result));
 	waitingForOperand = true;
+}
+
+QPoint Calculator::displayPos()
+{
+	return display->pos();
 }
 
 void Calculator::additiveOperatorClicked()

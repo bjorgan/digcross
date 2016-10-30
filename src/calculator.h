@@ -60,6 +60,8 @@ class Button;
 class Calculator : public QWidget {
 	Q_OBJECT
 	public:
+		enum DisplayPlacement{DISPLAY_ON_TOP, DISPLAY_ON_BOTTOM};
+
 		/**
 		 * Create calculator.
 		 *
@@ -72,6 +74,17 @@ class Calculator : public QWidget {
 		 * Get the current amount displayed in the calculator display.
 		 **/
 		double getDisplayedAmount();
+
+		/**
+		 * Position of calculator display.
+		 **/
+		QPoint displayPos();
+
+		/**
+		 * Set calculator display to be placed on top or bottom of
+		 * calculator.
+		 **/
+		void setDisplayPos(DisplayPlacement placement);
 	private slots:
 		/**
 		 * Various calculator operations.
