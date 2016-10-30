@@ -263,6 +263,7 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->setEditTriggers(QAbstractItemView::DoubleClicked);
 	listView->setModel(list);
 	listView->horizontalHeader()->setSectionResizeMode(ITEM_PRICE_COL, QHeaderView::Stretch);
+	listView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 	listView->resizeColumnToContents(ITEM_DELETEBUTTON_COL);
 
 	//use custom delegate for displaying each item
