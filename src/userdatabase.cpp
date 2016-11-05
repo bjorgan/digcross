@@ -79,7 +79,7 @@ bool UserDatabase::cardExists(QString card_id)
 	return exists;
 }
 
-int UserDatabase::addUsername(QString username)
+enum UserDatabase::createUser(QString username, QString card_id = QString())
 {
 	//Only call this function after user has been verified against ufs
 	bool success = false;
@@ -98,4 +98,25 @@ int UserDatabase::addUsername(QString username)
 	return success;
 }
 
+enum User_Database::findUser(QString card_id, QString *result)
+{
+	
+	QSqlQuery query;
+	query.prepare("select username from people where card_id = (:card_id)");
+	query.bindValue(":card_id", card_id);
+}
 
+enum User_Database::changeCard(QString username, QString card_id)
+{
+	query.prepare("update people set card_id = (:card_id) where username = (:username)");
+	query.bindValue(":card_id", card_id);
+	query.bindValue(":username", username);
+
+}
+
+enum User_Database::deleteUser(QString username)
+{
+	query.prepare("delete from people where username = (:username)");
+	query.bindValue(":username", username);
+
+}

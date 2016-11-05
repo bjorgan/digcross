@@ -31,16 +31,18 @@ public:
 	 *        card_id - optional parameter for card
 	 * /return 0 - SUCCESS - user successfully created
 	 *         1 - USER_EXISTS_ERROR - user already exists
+	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	int createUser(QString username, QString card_id = QString());
+	enum createUser(QString username, QString card_id = QString());
 
 	/**
 	 * Delete user
 	 * /param username - username to delete
 	 * /return 0 - SUCCESS - User successfully deleted
 	 *  	   2 - NO_USER_ERROR - user does not exist
+	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	int deleteUser(QString username);
+	enum deleteUser(QString username);
 	/**
 	 * Change card information for user
 	 * /param username - username to change card info for
@@ -48,16 +50,19 @@ public:
 	 * /return 0 - SUCCESS - Card id for user successfully updated
 	 *         2 - NO_USER_ERROR - user does not exist
 	 *         3 - CARD_OWNED_ERROR - card associated with different user
+	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	int changeCard(QString username, QString card_id);
+	enum changeCard(QString username, QString card_id);
 
 	/**
 	 * Find username associated to card
 	 * /param card_id - The card to investigate
-	 * /return username for user associated with card_id
-	 *         if no users are associated with card it will fill the return value with "NO_USER_ERROR"
+	 * 	  result - Pointer to result location
+	 * /return 0 - SUCCESS - result populated with associated username
+	 * 	   2 - NO_USER_ERROR - user does not exist
+	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	QString findUser(const QString& card_id);
+	enum findUser(QString card_id, QString *result);
 
 private:
 	QSqlDatabase m_db;
