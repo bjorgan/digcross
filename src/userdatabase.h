@@ -3,6 +3,15 @@
 #include <QSqlRecord>
 #include <QDebug>
 
+enum error_code
+{
+	SUCCESS = 0, 
+	USER_EXISTS_ERROR = 1,
+	NO_USER_ERROR = 2,
+	CARD_OWNED_ERROR = 3,
+	DATABASE_COMMUNICATION_ERROR = 4
+};
+
 class UserDatabase
 {
 public:
@@ -65,5 +74,5 @@ private:
 	 * /param card_id - card to check
 	 * /return true - card exists, false - card does not exist
 	 */
-	bool cardExists( QString card_id);		
+	bool cardExists(QString card_id);		
 }

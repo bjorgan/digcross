@@ -8,8 +8,8 @@
 //Starting sqlite3:     "sqlite3 digcross.db"
 //Initializing the table: 
 //"CREATE TABLE people(
-//	USER_ID TEXT PRIMARY KEY NOT NULL,
-//	CARD_ID TEXT);   
+//	username TEXT PRIMARY KEY NOT NULL,
+//	card_id TEXT);   
 //(Optional) Verify database has been created successfully by calling: ".tables"
 //Quit sqlite3: 	".quit"
 //Tables can be deleted by calling: "DROP TABLE TABLE_NAME;"
@@ -18,8 +18,6 @@
 //
 //For use in actual application the database will have to be fetched by a cronjob
 //or similar tools from its backup location. 
-
-
 
 UserDatabase::UserDatabase(QString path)
 {
@@ -47,40 +45,47 @@ UserDatabase::~UserDatabase()
 
 bool UserDatabase::usernameExists(QString username)
 {
-	bool not_exists = false;
+	bool exists = false;
 
 	QSqlQuery query;
-	query.prepare("SELECT name FROM people WHERE name = (:name)");
-	query.bindValue(":name", name);
+	query.prepare("SELECT username FROM people WHERE username = (:username)"); 
+	query.bindValue(":username", username); //fill placeholders with actual values
 
 	if(query.exec())
 	{
 		if(query.next())
 		{
-			not_exists = true;
+			exists = true;
 		}
-	}
-	else
-	{
-		qDebug() << "person exists failed: " << query.lastError();
-	}
-	return not_exists;
+	}	
+	return exists;
 }
 
 bool UserDatabase::cardExists(QString card_id)
 {
+	bool exists = false;
 
+	QSqlQuery query;
+	query.prepare("SELECT card_id FROM people WHERE card_id = (:card_id)"); //prepare query
+	query.bindValue(":card_id", card_id); //fill placeholders with actual values
 
+	if(query.exec())
+	{
+		if(query.next())
+		{
+			exists = true;
+		}
+	}	
+	return exists;
 }
 
-bool UserDatabase::addUsername(QString username)
+int UserDatabase::addUsername(QString username)
 {
+	//Only call this function after user has been verified against ufs
 	bool success = false;
-	//Verify that username is real and part of pool. Do query against ufs for
-	//verification, delete otherwise. Do this here or in higher level?
 	QSqlQuery query;
-	query.prepare("INSERT INTO people (name) VALUES (:name)"); // Prepare query
-	query.bindValue(":name", name); //Fill placeholders with proper values
+	query.prepare("INSERT INTO people (username) VALUES (:username)"); // Prepare query
+	query.bindValue(":username", username); //Fill placeholders with proper values
 	if(query.exec()) //Execute query
 	{
 		success = true;
