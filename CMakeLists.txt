@@ -17,13 +17,23 @@ target_link_libraries(digcrossd Qt5::DBus Qt5::Widgets)
 
 #daemon config
 set(DIGCROSSD_USER $ENV{USER}) #FIXME: Set a different username (e.g. digcrossd)
-configure_file(daemon-config/org.digcross.daemonconnection.service.in org.digcross.daemonconnection.service @ONLY)
-configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.daemonconnection.conf @ONLY)
+set(DAEMON_SERVICE_FILE "org.digcross.daemonconnection.service")
+set(DAEMON_CONF_FILE "org.digcross.daemonconnection.conf")
+configure_file(daemon-config/${DAEMON_SERVICE_FILE}.in ${DAEMON_SERVICE_FILE} @ONLY)
+configure_file(daemon-config/${DAEMON_CONF_FILE}.in ${DAEMON_CONF_FILE} @ONLY)
 
 #daemon installation
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.service DESTINATION /usr/share/dbus-1/system-services)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.conf DESTINATION /etc/dbus-1/system.d)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DAEMON_SERVICE_FILE} DESTINATION /usr/share/dbus-1/system-services/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DAEMON_CONF_FILE} DESTINATION /etc/dbus-1/system.d/)
 install(TARGETS digcrossd DESTINATION bin)
+
+#polkit files
+set(AUTH_FILE "51-digcross-auth.conf")
+set(POLKIT_FILE "org.digcross.admin.authentication.policy")
+configure_file(daemon-config/${AUTH_FILE}.in ${AUTH_FILE} @ONLY)
+configure_file(daemon-config/${POLKIT_FILE}.in ${POLKIT_FILE} @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${AUTH_FILE} DESTINATION /etc/polkit-1/localauthorityi.conf.d/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${POLKIT_FILE} DESTINATION /usr/share/polkit-1/actions/)
 
 #tests
 if (WITH_TESTING)
