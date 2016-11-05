@@ -32,7 +32,7 @@ set(AUTH_FILE "51-digcross-auth.conf")
 set(POLKIT_FILE "org.digcross.admin.authentication.policy")
 configure_file(daemon-config/${AUTH_FILE}.in ${AUTH_FILE} @ONLY)
 configure_file(daemon-config/${POLKIT_FILE}.in ${POLKIT_FILE} @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${AUTH_FILE} DESTINATION /etc/polkit-1/localauthorityi.conf.d/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${AUTH_FILE} DESTINATION /etc/polkit-1/localauthority.conf.d/)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${POLKIT_FILE} DESTINATION /usr/share/polkit-1/actions/)
 
 #tests
