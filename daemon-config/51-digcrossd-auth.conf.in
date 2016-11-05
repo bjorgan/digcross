@@ -1,0 +1,4 @@
+Identity=unix-group:digcrossd_users
+Action=org.digcross.admin.authentication
+ResultInactive=auth_self
+ResultActive=auth_self
