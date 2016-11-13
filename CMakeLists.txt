@@ -11,6 +11,10 @@ find_package(Qt5DBus)
 add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp)
 target_link_libraries(digcross Qt5::Widgets Qt5::DBus)
 
+#admin GUI
+add_executable(digcross-admin admin-src/admin_main.cpp)
+install(TARGETS digcross-admin DESTINATION bin)
+
 #transaction daemon
 add_executable(digcrossd daemon/main.cpp daemon/daemon.cpp)
 target_link_libraries(digcrossd Qt5::DBus Qt5::Widgets)
@@ -28,8 +32,10 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DAEMON_CONF_FILE} DESTINATION /etc/d
 install(TARGETS digcrossd DESTINATION bin)
 
 #polkit files
+set(DIGCROSS_ADMIN_USER_GROUP "digcrossd_users")
 set(AUTH_FILE "51-digcross-auth.conf")
-set(POLKIT_FILE "org.digcross.admin.authentication.policy")
+set(POLKIT_ACTION "org.digcross.admin.authentication")
+set(POLKIT_FILE "${POLKIT_ACTION}.policy")
 configure_file(daemon-config/${AUTH_FILE}.in ${AUTH_FILE} @ONLY)
 configure_file(daemon-config/${POLKIT_FILE}.in ${POLKIT_FILE} @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${AUTH_FILE} DESTINATION /etc/polkit-1/localauthority.conf.d/)

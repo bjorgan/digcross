@@ -4,7 +4,7 @@
  "http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
 <policyconfig>
 
-  <action id="org.digcross.admin.authentication">
+    <action id="@POLKIT_ACTION@">
     <message>Authentication is required to run digcross' admin interface</message>
     <icon_name>digcross</icon_name>
     <defaults>

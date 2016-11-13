@@ -1,4 +1,4 @@
-Identity=unix-group:digcrossd_users
-Action=org.digcross.admin.authentication
+Identity=unix-group:@DIGCROSS_ADMIN_USER_GROUP@
+Action=@POLKIT_ACTION@
 ResultInactive=auth_self
 ResultActive=auth_self
