@@ -11,7 +11,6 @@
  *
  * - To process a transaction, call processTransaction() on a given card number and amount to process.
  * - To receive a result from this transaction, connect transactionFeedback() to a suitable SLOT.
- * - DBus-related errors are signaled through dbusError().
  **/
 class DaemonClient : public QObject {
 	Q_OBJECT
@@ -23,9 +22,12 @@ class DaemonClient : public QObject {
 				       USER_BLACKLISTED,
 				       USER_NOT_IN_UFS_DATABASE,
 				       USER_NOT_IN_LOCAL_DATABASE,
-				       UFS_UNAVAILABLE};
+				       UFS_UNAVAILABLE,
+				       DBUS_ERROR};
 
 		DaemonClient(QObject *parent = NULL);
+
+		static QString errorMessage(TransactionStatus status);
 	public slots:
 		/**
 		 * Attempt to process transaction for a card number and amount.
@@ -40,18 +42,11 @@ class DaemonClient : public QObject {
 		 * the daemon. By design, we restrict database information to
 		 * the information defined here.
 		 *
-		 * \param card_number Card number for which transaction was processed
+		 * \param username Username for which transaction was processed
 		 * \param newBalance New balance for user after transaction
 		 * \param status Status of transaction
 		 **/
-		void transactionFeedback(QString card_number, float newBalance, TransactionStatus status);
-
-		/**
-		 * Signalled on DBus errors.
-		 *
-		 * \param errorMessage Error message
-		 **/
-		void dbusError(QString errorMessage);
+		void transactionFeedback(QString username, float newBalance, DaemonClient::TransactionStatus status);
 	private slots:
 		/**
 		 * For catching internal signal when daemon is finished with

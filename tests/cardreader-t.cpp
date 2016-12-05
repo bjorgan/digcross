@@ -27,7 +27,7 @@ void CardReaderTest::simulateKeyboardInput()
 	QSignalSpy spy(&cardReader, SIGNAL(newCardNumber(QString)));
 	QVERIFY(spy.isValid());
 
-	int keyTypingTime = CARDREADER_TIME_LIMIT_MS*1.0/((TEST_CARDNUMBER.size())*1.0);
+	int keyTypingTime = 50;
 	QTest::keyClicks(&widget, TEST_CARDNUMBER, Qt::NoModifier, keyTypingTime);
 	QTest::keyClick(&widget, Qt::Key_Return);
 

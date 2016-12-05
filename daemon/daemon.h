@@ -11,7 +11,7 @@ class Daemon : public QObject {
 	public slots:
 		/**
 		 * Receive request for transaction from GUI application.
-		 * Returns with card number, current balance and transaction
+		 * Returns with username, current balance and transaction
 		 * status when finished. (QString, QString, int)
 		 *
 		 * \param card_number Card number
