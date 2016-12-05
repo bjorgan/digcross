@@ -214,4 +214,22 @@ class ShoppingListItemDelegate : public QStyledItemDelegate {
 		 * It is assumed that actual button clicking in the cell is handled elsewhere (i.e. in ShoppingListWidget).
 		 **/
 		virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+		/**
+		 * Reimplemented from QStyledItemDelegate. Create Calculator
+		 * widget and return as editor.
+		 **/
+		virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+		/**
+		 * Reimplemented from QStyledItemDelegate. Obtain current
+		 * displayed amount from Calculator and set to the model.
+		 **/
+		virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+
+		/**
+		 * Move calculator widget so that its display overlaps with the
+		 * cell that is being edited.
+		 **/
+		virtual void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };

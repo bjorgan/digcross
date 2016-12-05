@@ -8,7 +8,7 @@ find_package(Qt5Widgets)
 find_package(Qt5DBus)
 
 #main GUI application
-add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp)
+add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp src/calculator.cpp)
 target_link_libraries(digcross Qt5::Widgets Qt5::DBus)
 
 #transaction daemon

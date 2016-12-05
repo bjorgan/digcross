@@ -1,4 +1,5 @@
 #include "shoppinglist.h"
+#include "calculator.h"
 
 ShoppingList::ShoppingList(QObject *parent) : QAbstractTableModel(parent)
 {
@@ -173,6 +174,9 @@ bool ShoppingList::setData(const QModelIndex &index, const QVariant &value, int 
 #include <QPushButton>
 #include <QApplication>
 #include <QStyleOptionButton>
+#include <QPixmap>
+#include <QBitmap>
+#include <QDesktopWidget>
 
 ShoppingListItemDelegate::ShoppingListItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
@@ -205,6 +209,49 @@ void ShoppingListItemDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 	}
 }
 
+QWidget* ShoppingListItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	Calculator *calculator = new Calculator(option.rect.height(), option.rect.width(), parent);
+
+	//make calculator stay on top of everything else
+	calculator->setWindowFlags(Qt::Popup);
+
+	calculator->layout()->activate(); //force layout update
+
+	return calculator;
+}
+
+void ShoppingListItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	QWidget *parent = qobject_cast<QWidget*>(editor->parent());
+	QPoint parentAbsolutePos = parent->mapToGlobal(parent->pos());
+	Calculator *calculator = qobject_cast<Calculator*>(editor);
+
+	//flip display field position if the space left on the screen is too small
+	int remainingScreenHeight = QApplication::desktop()->screenGeometry().height() - parentAbsolutePos.y();
+	int calculatorEndPosition = option.rect.y() + calculator->height();
+	if (remainingScreenHeight < calculatorEndPosition) {
+		calculator->setDisplayPos(Calculator::DISPLAY_ON_BOTTOM);
+	} else {
+		calculator->setDisplayPos(Calculator::DISPLAY_ON_TOP);
+	}
+
+	//move calculator so that its display field is positioned directly above the amount field
+	QPoint calculatorDisplayPos = calculator->displayPos();
+	editor->move(parentAbsolutePos.x() + option.rect.x(), parentAbsolutePos.y() + option.rect.y() - calculatorDisplayPos.y());
+
+	//make the calculator background become transparent
+	calculator->setAutoFillBackground(false);
+	QPixmap pixmap = calculator->grab();
+	calculator->setMask(pixmap.createHeuristicMask());
+}
+
+void ShoppingListItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+	Calculator *calculator = qobject_cast<Calculator*>(editor);
+	model->setData(index, QVariant(calculator->getDisplayedAmount()));
+}
+
 ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QWidget(parent), shoppingList(list)
 {
 	//view for displaying shopping list
@@ -216,6 +263,7 @@ ShoppingListWidget::ShoppingListWidget(ShoppingList *list, QWidget *parent) : QW
 	listView->setEditTriggers(QAbstractItemView::DoubleClicked);
 	listView->setModel(list);
 	listView->horizontalHeader()->setSectionResizeMode(ITEM_PRICE_COL, QHeaderView::Stretch);
+	listView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 	listView->resizeColumnToContents(ITEM_DELETEBUTTON_COL);
 
 	//use custom delegate for displaying each item
