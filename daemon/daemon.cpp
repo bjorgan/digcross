@@ -5,6 +5,7 @@
 #include "daemon_common.h"
 #include "daemon_client.h"
 #include <unistd.h>
+#include <syslog.h>
 
 static double currentBalance = 400; //FIXME: Remove when real backend is implemented. Used for simulating a user account.
 
@@ -44,16 +45,23 @@ void Daemon::processTransaction(QString card_number, QString amount, const QDBus
 	QDBusConnection::systemBus().send(reply);
 }
 
+void write_to_syslog(const char *message)
+{
+	openlog("digcrossd", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL0);
+	syslog(LOG_ERR, message);
+	closelog();
+}
+
 Daemon::Daemon(QObject *parent) : QObject(parent)
 {
 	//check for dbus errors
 	if (!QDBusConnection::systemBus().isConnected()) {
-		fprintf(stderr, "Cannot connect to the D-Bus system bus.\n");
+		write_to_syslog("Cannot connect to the D-Bus system bus.");
 		exit(1);
 	}
 
 	if (!QDBusConnection::systemBus().registerService(DBUS_SERVICE_NAME)) {
-		fprintf(stderr, "%s\n",	qPrintable(QDBusConnection::systemBus().lastError().message()));
+		write_to_syslog(qPrintable(QDBusConnection::systemBus().lastError().message()));
 		exit(1);
 	}
 
