@@ -16,7 +16,7 @@ add_executable(digcrossd daemon/main.cpp daemon/daemon.cpp)
 target_link_libraries(digcrossd Qt5::DBus Qt5::Widgets)
 
 #daemon config
-set(DIGCROSSD_USER $ENV{USER}) #FIXME: Set a different username (e.g. digcrossd)
+set(DIGCROSSD_USER "digcrossd")
 configure_file(daemon-config/org.digcross.daemonconnection.service.in org.digcross.daemonconnection.service @ONLY)
 configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.daemonconnection.conf @ONLY)
 
@@ -24,6 +24,10 @@ configure_file(daemon-config/org.digcross.daemonconnection.conf.in org.digcross.
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.service DESTINATION /usr/share/dbus-1/system-services)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.digcross.daemonconnection.conf DESTINATION /etc/dbus-1/system.d)
 install(TARGETS digcrossd DESTINATION bin)
+
+#daemon user creation
+configure_file(${CMAKE_SOURCE_DIR}/CreateDigcrossdUser.cmake.in ${CMAKE_BINARY_DIR}/CreateDigcrossdUser.cmake @ONLY)
+install(SCRIPT "${CMAKE_BINARY_DIR}/CreateDigcrossdUser.cmake")
 
 #tests
 if (WITH_TESTING)

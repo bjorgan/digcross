@@ -17,10 +17,12 @@ On the daemon's end, transactions are received using `Daemon::processTransaction
 Configuration files
 -------------------
 
-It is assumed that `digcrossd` will eventually be run by a separate user from the user running the GUI application. The DBus calls are therefore sent through the system bus, as the session bus is per-user. This necessitates special DBus policies for the user running `digcrossd`, which has been specified in `daemon-config/org.digcross.daemonconnection.conf.in`.
+`digcrossd` is run by a separate user from the user running the GUI application. The DBus calls are therefore sent through the system bus, as the session bus is per-user. This necessitates special DBus policies for the user running `digcrossd`, which has been specified in `daemon-config/org.digcross.daemonconnection.conf.in`.
 
 In addition, for convenience, `digcrossd` is activated as a DBus service when needed by the GUI application. This means that `digcrossd` won't have to be started in advance or during boot, but will start when needed, automagically. This is specified in `daemon-config/org.digcross.daemonconnection.service.in`.
 
-Both configuration files contain references to the user running the `digcrossd` application. The username is specified in the variable `DIGCROSSD_USER` in `CMakeLists.txt`, currently set to be the user compiling the application.
+Both configuration files contain references to the user running the `digcrossd` application. The username is specified in the variable `DIGCROSSD_USER` in `CMakeLists.txt`.
 
 Both configuration files need to be installed to system-wide DBus configuration directories. This is specified by install rules in `CMakeLists.txt`.
+
+The `digcrossd` user is automatically created by CMake using `CreateDigcrossdUser.cmake` when `make install` is run.
