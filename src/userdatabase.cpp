@@ -92,8 +92,7 @@ enum UserDatabase::createUser(QString username, QString card_id = QString())
 	}
 	else
 	{
-		qDebug() << "addUsername error: "
-			 << query.lastError();
+		return DATABASE_COMMUNICATION_ERROR; 
 	}
 	return success;
 }
