@@ -6,6 +6,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 find_package(Qt5DBus)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 #main GUI application
 add_executable(digcross src/main.cpp src/mainwindow.cpp src/cardreader.cpp src/daemon_client.cpp src/shoppinglist.cpp src/calculator.cpp)
