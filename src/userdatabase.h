@@ -25,15 +25,17 @@ public:
 	 * Destructor, closes the db connection
 	 */
 	~UserDatabase();
+
 	/**
 	 * Create new row in database, populate with USER_ID
 	 * /param username - username of new user
 	 *        card_id - optional parameter for card
 	 * /return 0 - SUCCESS - user successfully created
 	 *         1 - USER_EXISTS_ERROR - user already exists
+	 *         3 - CARD_OWNED_ERROR
 	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	enum createUser(QString username, QString card_id = QString());
+	error_code createUser(QString username, QString card_id = QString());
 
 	/**
 	 * Delete user
@@ -42,17 +44,18 @@ public:
 	 *  	   2 - NO_USER_ERROR - user does not exist
 	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	enum deleteUser(QString username);
+	error_code deleteUser(QString username);
+
 	/**
 	 * Change card information for user
 	 * /param username - username to change card info for
-	 * 	  card_id - card info
+	 * 	  card_id - new card info
 	 * /return 0 - SUCCESS - Card id for user successfully updated
 	 *         2 - NO_USER_ERROR - user does not exist
 	 *         3 - CARD_OWNED_ERROR - card associated with different user
 	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	enum changeCard(QString username, QString card_id);
+	error_code changeCard(QString username, QString card_id);
 
 	/**
 	 * Find username associated to card
@@ -62,7 +65,7 @@ public:
 	 * 	   2 - NO_USER_ERROR - user does not exist
 	 *	   4 - DATABASE_COMMUNICATION_ERROR
 	 */
-	enum findUser(QString card_id, QString *result);
+	error_code findUser(QString card_id, QString *result);
 
 private:
 	QSqlDatabase m_db;
