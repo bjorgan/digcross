@@ -1,0 +1,2 @@
+set(DIGCROSSD_USER @DIGCROSSD_USER@)
+execute_process(COMMAND adduser --system ${DIGCROSSD_USER})

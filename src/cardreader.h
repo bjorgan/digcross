@@ -1,3 +1,6 @@
+#ifndef CARDREADER_H_DEFINED
+#define CARDREADER_H_DEFINED
+
 #include <QObject>
 #include <QElapsedTimer>
 
@@ -9,12 +12,24 @@ const int CARDREADER_TIME_LIMIT_MS = 100;
 /**
  * Receives input from RFID card reader. Accumulates characters in a buffer and
  * emits a signal when card number is ready. (Receives keyboard characters,
- * send signal on \n.) Must be installed as an event filter in a widget.
+ * send signal on \n.) Blocks all keyboard input.
+ *
+ * Enable by using enable(), disable keyboard filtering using disable(). Enabled by default.
  **/
 class CardReader : public QObject {
 	Q_OBJECT
 	public:
-		CardReader(QObject *parent = NULL){};
+		CardReader(QObject *parent = NULL){enable();};
+
+		/**
+		 * Enable card reader input and block all keyboard input to all other widgets.
+		 **/
+		void enable();
+
+		/**
+		 * Disable card reader input and enable keyboard input to other widgets.
+		 **/
+		void disable();
 	signals:
 		/**
 		 * New card number has been received from RFID reader.
@@ -38,3 +53,5 @@ class CardReader : public QObject {
 		///Used for measuring time since first character
 		QElapsedTimer writeTime;
 };
+
+#endif
