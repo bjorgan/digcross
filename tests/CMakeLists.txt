@@ -14,7 +14,7 @@ MACRO (add_qt_test testname testsrc)
 	ADD_TEST(test_${testname} test_${testname})
 ENDMACRO (add_qt_test)
 
-add_library(digcross_test_common ../src/daemon_client.cpp ../src/cardreader.cpp ../src/shoppinglist.cpp)
+add_library(digcross_test_common ../src/daemon_client.cpp ../src/cardreader.cpp ../src/shoppinglist.cpp ../src/calculator.cpp)
 target_link_libraries(digcross_test_common Qt5::Test Qt5::DBus Qt5::Widgets)
 
 add_qt_test(daemonclient daemon_client-t.cpp)
