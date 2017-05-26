@@ -24,7 +24,7 @@ UserDatabase::UserDatabase(QString path)
 	m_db = QSqlDatabase::addDatabase("QSQLITE");
 	m_db.setDatabaseName(path);
 
-	if (!m_db.open()
+	if (!m_db.open())
 	{
 		qDebug() << "Error: connection with database failed";
 	}
@@ -81,12 +81,12 @@ bool UserDatabase::cardExists(QString card_id)
 
 error_code UserDatabase::createUser(QString username, QString card_id = QString())
 {
-	if(usernameExists(username)
+	if(usernameExists(username))
 	{
 		return USER_EXISTS_ERROR;
 	}
 
-	if(cardExists(card_id)
+	if(cardExists(card_id))
 	{
 		return CARD_EXISTS_ERROR;
 	}
